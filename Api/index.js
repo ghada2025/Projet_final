@@ -4,9 +4,8 @@ import express from "express";
 import helmet from "helmet";
 import { connectDB } from "./config/connect-db.js";
 import cookieParser from "cookie-parser";
-import { userRouter } from "./routers/users.js";
-import { productRouter } from "./routers/products.js";
-import { orderRouter } from "./routers/orders.js";
+import { teacherRouter } from "./routers/Teachers.js";
+import { studentRouter } from "./routers/Students.js";
 
 const app = express();
 
@@ -32,9 +31,9 @@ app.use(cookieParser());
 app.use(express.static("public"));
 
 // 📌 Routes
-app.use("/users", userRouter);
-app.use("/products", productRouter);
-app.use("/orders", orderRouter);
+app.use("/student", studentRouter);
+app.use("/teacher", teacherRouter);
+
 
 // 🏓 Route de test pour vérifier si le serveur fonctionne
 app.get("/ping", (req, res) => {
