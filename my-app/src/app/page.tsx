@@ -6,7 +6,6 @@ import Navbar from "@/components/navbar";
 import TextArea from "@/components/textarea";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 
 export default function Home() {
   const cardInfo = [
@@ -74,7 +73,7 @@ export default function Home() {
                   </button>
                 </Link>
                 <a href="#About">
-                  <button className="header-p-font px-[30px] py-[6px] rounded-[50px] cursor-pointer font-bold">
+                  <button className="header-p-font px-[30px] py-[6px] rounded-[50px] cursor-pointer font-bold card">
                     Get more info
                   </button>
                 </a>
@@ -111,7 +110,7 @@ export default function Home() {
                   </button>
                 </a>
               </div>
-              <div>
+              <div className="width-card">
                 {/* add a video */}
                 <iframe
                   width="560"
@@ -122,6 +121,7 @@ export default function Home() {
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   referrerPolicy="strict-origin-when-cross-origin"
                   allowFullScreen
+                  className="rounded-lg"
                 ></iframe>
               </div>
             </div>

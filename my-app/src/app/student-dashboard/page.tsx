@@ -14,6 +14,8 @@ export default function StudentDashboard() {
   //     description:
   //       "Learn numbers, shapes, and fun puzzles to become a little math wizard!",
   //     image: "/calculating.png",
+  //     color: "red",
+  //     status: "Done",
   //   },
   //   {
   //     id: "2",
@@ -21,6 +23,8 @@ export default function StudentDashboard() {
   //     description:
   //       "Discover how plants grow, why the sky is blue, and explore fun experiments!",
   //     image: "/calculating.png",
+  //     color: "orange",
+  //     status: "Upcoming",
   //   },
   //   {
   //     id: "3",
@@ -59,7 +63,7 @@ export default function StudentDashboard() {
   //   },
   //   {
   //     id: "8",
-  //     title: "Physical Education",
+  //     title: "PE",
   //     description:
   //       "Run, jump, dance and play games that keep you active and strong!",
   //     image: "/calculating.png",
@@ -71,12 +75,6 @@ export default function StudentDashboard() {
   const [courses, setCourses] = useState<any>([]);
   const [events, setEvents] = useState<any>([]);
   const [assignments, setAssignments] = useState<any>([]);
-
-  interface MongoBase {
-    _id: string;
-    [key: string]: any;
-  }
-  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -104,15 +102,15 @@ export default function StudentDashboard() {
             },
           }),
         ]);
-  
+
         if (!coursesRes.ok || !eventsRes.ok || !assignmentsRes.ok) {
           throw new Error("One of the fetches failed");
         }
-  
+
         const coursesData = await coursesRes.json();
         const eventsData = await eventsRes.json();
         const assignmentsData = await assignmentsRes.json();
-  
+
         // Utility to replace _id with id
         const replaceId = (obj: any) => {
           const newObj = { ...obj };
@@ -120,20 +118,17 @@ export default function StudentDashboard() {
           delete newObj._id;
           return newObj;
         };
-  
+
         setCourses(coursesData.courses.map(replaceId));
         setEvents(eventsData.events.map(replaceId));
         setAssignments(assignmentsData.assignments.map(replaceId));
-        
       } catch (err) {
         console.error("Fetching error:", err);
       }
     };
-  
+
     fetchData();
   }, []);
-  
-  
 
   const [numElements, setNumElements] = useState(4);
   const [load, setLoad] = useState(numElements);
@@ -186,28 +181,10 @@ export default function StudentDashboard() {
           <div className="footer-padding">
             <div className="flex items-center justify-between">
               <h3 className="header-h3-font">This week course</h3>
-              <div className="flex items-center gap-4 p-font font-bold">
-                <button
-                  onClick={() => {
-                    setLoad(load + numElements);
-                  }}
-                >
-                  view more
-                </button>
-                <button
-                  onClick={() => {
-                    if (load > numElements) {
-                      setLoad(load - numElements);
-                    }
-                  }}
-                >
-                  view less
-                </button>
-              </div>
             </div>
-            <div className="grid grid-cols-4 gap-10 [@media(max-width:1000px)]:grid-cols-3 [@media(max-width:700px)]:grid-cols-2 section-padding">
+            <div className="flex overflow-x-auto scroll-container gap-10 [@media(max-width:700px)]:grid-cols-2 section-padding">
               {/* Course cards */}
-              {courses.slice(0, load).map((course: any, index: number) => (
+              {courses.map((course: any, index: number) => (
                 <Link key={index} href={`/student-dashboard/${course.id}`}>
                   <CourseCard course={course}></CourseCard>
                 </Link>

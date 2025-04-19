@@ -363,7 +363,7 @@ export function EventCalendar({
           {view === "month" && (
             <MonthView
               currentDate={currentDate}
-              events={classes}
+              events={classes}//
               onEventSelect={handleEventSelect}
               onEventCreate={handleEventCreate}
             />

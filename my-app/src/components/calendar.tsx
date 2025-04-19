@@ -128,7 +128,7 @@ import { EventCalendar } from "./calendar/event-calendar";
 //   },
 // ];
 
-export default function Calendar({sampleEvents, classes}: {sampleEvents: CalendarEvent[], classes: any}) {
+export default function Calendar({sampleEvents, classes}: {sampleEvents: CalendarEvent[], classes?: any}) {
   const [events, setEvents] = useState<CalendarEvent[]>(sampleEvents);
 
 

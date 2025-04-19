@@ -16,16 +16,16 @@ export default function Footer() {
             <div>
               <h3 className="header-h3-font">Quick links</h3>
               <ul className="header-p-padding header-p-font">
-                <li>
-                  <a href="#About" className="cursor-pointer">About Us</a>
+                <li className="card">
+                  <a href="#About" className="cursor-pointer ">About Us</a>
                 </li>
-                <li>
-                  <a href="#Course" className="cursor-pointer">Course</a>
+                <li className="card">
+                  <a href="#Course" className="cursor-pointer ">Course</a>
                 </li>
-                <li>
-                  <a href="#Contact" className="cursor-pointer">Contact Us</a>
+                <li className="card">
+                  <a href="#Contact" className="cursor-pointer ">Contact Us</a>
                 </li>
-                <li>
+                <li className="card">
                   <a href="#Subscription" className="cursor-pointer">Subscription</a>
                 </li>
               </ul>
