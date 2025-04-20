@@ -6,6 +6,12 @@ import { connectDB } from "./config/connect-db.js";
 import cookieParser from "cookie-parser";
 import { teacherRouter } from "./routers/Teachers.js";
 import { studentRouter } from "./routers/Students.js";
+import { classRouter } from "./routers/classes.js";
+import { courseRouter } from "./routers/Courses.js";
+import { eventRouter } from "./routers/Events.js";
+import { quizRouter } from "./routers/Quizs.js";
+import { assignmentRouter } from "./routers/Assignments.js";
+
 
 const app = express();
 
@@ -31,9 +37,13 @@ app.use(cookieParser());
 app.use(express.static("public"));
 
 // 📌 Routes
+app.use("/course", courseRouter);
+app.use("/class", classRouter);
 app.use("/student", studentRouter);
 app.use("/teacher", teacherRouter);
-
+app.use("/event", eventRouter);
+app.use("/quiz", quizRouter);
+app.use("/assignment", assignmentRouter);
 
 // 🏓 Route de test pour vérifier si le serveur fonctionne
 app.get("/ping", (req, res) => {
