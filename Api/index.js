@@ -37,8 +37,8 @@ app.use(cookieParser());
 app.use(express.static("public"));
 
 // 📌 Routes
-app.use("/course", courseRouter);
 app.use("/class", classRouter);
+app.use("/course", courseRouter);
 app.use("/student", studentRouter);
 app.use("/teacher", teacherRouter);
 app.use("/event", eventRouter);

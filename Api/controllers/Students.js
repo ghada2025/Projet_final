@@ -4,7 +4,6 @@ import { Course } from "../models/Course.js";
 
 const MILLISECONDS_IN_A_DAY = 1000 * 60 * 60 * 24;
 
-
 export async function getMyProfile(req, res) {
     try {
         const studentId = req.cookies.student; // 📦 On récupère l'id du cookie
@@ -31,6 +30,7 @@ export async function registerStudent(req, res) {
         const { firstName, lastName, email, password, grade } = req.body;
 
         // 🔎 Vérifie si l'email existe déjà
+        // 🔎 Vérifie si l'email existe déjà
         const StudentExists = await Student.findOne({ email });
         if (StudentExists) {
             return res.status(400).json({ message: "Email déjà utilisé 📧" });
@@ -42,8 +42,10 @@ export async function registerStudent(req, res) {
         }
 
         // 🔐 Hash du mot de passe
+        // 🔐 Hash du mot de passe
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(password, salt);
+
 
         const newStudent = new Student({
             firstName,
