@@ -126,13 +126,15 @@ export function getAllEventsForDay(
  * Get all events for a day (for agenda view)
  */
 export function getAgendaEventsForDay(
-  events: CalendarEvent[],
+  events: any,
   day: Date
-): CalendarEvent[] {
+): any {
   return events
     .filter((event) => {
-      const eventStart = new Date(event.start)
-      const eventEnd = new Date(event.end)
+      const eventStart = new Date(event.startDate)
+      console.log("eventStart ",eventStart)
+      const eventEnd = new Date(event.endDate)
+      console.log("eventEnd ",eventEnd)
       return (
         isSameDay(day, eventStart) ||
         isSameDay(day, eventEnd) ||

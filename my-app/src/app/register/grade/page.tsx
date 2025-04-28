@@ -1,7 +1,8 @@
 "use client";
+import { FormData } from "@/app/types";
 import FlipCard from "@/components/test";
 
-export default function Grade() {
+export default function Grade({data}:{data:FormData}) {
 
   const grades = [
     {
@@ -36,6 +37,7 @@ export default function Grade() {
               image={grade.image}
               levels={grade.levels}
               grade={grade.grade}
+              dataIn={data}
             />
           ))}
         </div>

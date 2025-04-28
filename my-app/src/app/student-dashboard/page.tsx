@@ -7,71 +7,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function StudentDashboard() {
-  // const courses = [
-  //   {
-  //     id: "1",
-  //     title: "Mathematics",
-  //     description:
-  //       "Learn numbers, shapes, and fun puzzles to become a little math wizard!",
-  //     image: "/calculating.png",
-  //     color: "red",
-  //     status: "Done",
-  //   },
-  //   {
-  //     id: "2",
-  //     title: "Science",
-  //     description:
-  //       "Discover how plants grow, why the sky is blue, and explore fun experiments!",
-  //     image: "/calculating.png",
-  //     color: "orange",
-  //     status: "Upcoming",
-  //   },
-  //   {
-  //     id: "3",
-  //     title: "History",
-  //     description:
-  //       "Travel back in time to meet dinosaurs, ancient kings, and explore cool old stuff!",
-  //     image: "/calculating.png",
-  //   },
-  //   {
-  //     id: "4",
-  //     title: "Geography",
-  //     description:
-  //       "Explore maps, countries, animals, and discover amazing places around the world!",
-  //     image: "/calculating.png",
-  //   },
-  //   {
-  //     id: "5",
-  //     title: "English",
-  //     description:
-  //       "Read stories, learn new words, and become a young storyteller and reader!",
-  //     image: "/calculating.png",
-  //   },
-  //   {
-  //     id: "6",
-  //     title: "Art",
-  //     description:
-  //       "Paint, draw, and create colorful masterpieces with your imagination!",
-  //     image: "/calculating.png",
-  //   },
-  //   {
-  //     id: "7",
-  //     title: "Music",
-  //     description:
-  //       "Play fun instruments, sing songs, and explore the magical world of music!",
-  //     image: "/calculating.png",
-  //   },
-  //   {
-  //     id: "8",
-  //     title: "PE",
-  //     description:
-  //       "Run, jump, dance and play games that keep you active and strong!",
-  //     image: "/calculating.png",
-  //   },
-  // ];
-
-  // fetching data from the server
-
   const [courses, setCourses] = useState<any>([]);
   const [events, setEvents] = useState<any>([]);
   const [assignments, setAssignments] = useState<any>([]);
@@ -103,7 +38,13 @@ export default function StudentDashboard() {
           }),
         ]);
 
-        if (!coursesRes.ok || !eventsRes.ok || !assignmentsRes.ok) {
+        if (!coursesRes.ok) {
+          throw new Error("One of the fetches failed");
+        }
+        if (!eventsRes.ok) {
+          throw new Error("One of the fetches failed");
+        }
+        if (!assignmentsRes.ok) {
           throw new Error("One of the fetches failed");
         }
 
@@ -121,7 +62,7 @@ export default function StudentDashboard() {
 
         setCourses(coursesData.courses.map(replaceId));
         setEvents(eventsData.events.map(replaceId));
-        setAssignments(assignmentsData.assignments.map(replaceId));
+        setAssignments(assignmentsData.map(replaceId));
       } catch (err) {
         console.error("Fetching error:", err);
       }
@@ -154,62 +95,87 @@ export default function StudentDashboard() {
     };
   }, []);
 
-  const classes: any = courses.map(
-    ({
+  // Format classes from courses
+  const formatClassesToCalendarEvents = (courses: any[]): CalendarEvent[] => {
+    return courses.map(({
       title,
       description,
+      startDate,
+      endDate,
       startTime,
       endTime,
+      id
     }: {
-      title: any;
-      description: any;
-      startTime: any;
-      endTime: any;
-    }) => ({ title, description, startTime, endTime })
-  );
+      title: string;
+      description: string;
+      startDate: string;
+      endDate: string;
+      startTime: string;
+      endTime: string;
+      id: string;
+    }) => {
+      const start = new Date(`${startDate.split("T")[0]}T${startTime}`);
+      const end = new Date(`${endDate.split("T")[0]}T${endTime}`);
+  
+      return {
+        id,
+        title,
+        description,
+        start,   // The 'start' should be a Date object
+        end,     // The 'end' should be a Date object
+        startTime,
+        endTime,
+        allDay: false, // Explicitly mark it as a timed event
+      };
+    });
+  };
+  
+  
 
   return (
     <>
       <div className="flex items-center justify-center relative">
         <div className="max-w-[1400px] px-[50px] w-full">
           {/* Header part */}
-
-          <Header show></Header>
-
+          <Header show />
+  
           {/* Course Section */}
-
           <div className="footer-padding">
             <div className="flex items-center justify-between">
-              <h3 className="header-h3-font">This week course</h3>
+              <h3 className="header-h3-font text-[clamp(20px,4vw,32px)]">This week course</h3>
             </div>
+  
             <div className="flex overflow-x-auto scroll-container gap-10 [@media(max-width:700px)]:grid-cols-2 section-padding">
               {/* Course cards */}
               {courses.map((course: any, index: number) => (
                 <Link key={index} href={`/student-dashboard/${course.id}`}>
-                  <CourseCard course={course}></CourseCard>
+                  <CourseCard course={course} />
                 </Link>
               ))}
             </div>
           </div>
-
+  
           {/* Organisation Section */}
-
-          <div className="grid grid-cols-2 gap-10 w-full">
+          <div className="grid grid-cols-2 gap-10 w-full
+            [@media(max-width:700px)]:grid-cols-1">
             <div>
-              <h3 className="header-h3-font">Calendar</h3>
+              <h3 className="header-h3-font text-[clamp(20px,4vw,32px)]">Calendar</h3>
               <div className="rounded-lg border-3 border-b-7 border-r-7 border-black header-p-margin">
-                <Calendar sampleEvents={events} classes={classes}></Calendar>
+                <Calendar
+                  sampleEvents={events}
+                  classes={formatClassesToCalendarEvents(courses)}
+                />
               </div>
             </div>
             <div>
-              <h3 className="header-h3-font">Assignments</h3>
+              <h3 className="header-h3-font text-[clamp(20px,4vw,32px)]">Assignments</h3>
               <div className="rounded-lg border-3 border-b-7 border-r-7 border-black header-p-margin">
-                <Assignments items={assignments}></Assignments>
+                <Assignments items={assignments} />
               </div>
             </div>
           </div>
         </div>
       </div>
     </>
-  );
+  );  
 }

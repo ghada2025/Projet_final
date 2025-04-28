@@ -13,9 +13,7 @@ import { getBorderRadiusClasses, getEventColorClasses } from "./utils";
 // 'h' - hours (1-12)
 // 'a' - am/pm
 // ':mm' - minutes with leading zero (only if the token 'mm' is present)
-const formatTimeWithOptionalMinutes = (date: Date) => {
-  return format(date, getMinutes(date) === 0 ? "ha" : "h:mma").toLowerCase();
-};
+
 
 interface EventWrapperProps {
   event: CalendarEvent;
@@ -51,9 +49,9 @@ function EventWrapper({
   const displayEnd = currentTime
     ? new Date(
         new Date(currentTime).getTime() +
-          (new Date(event.end).getTime() - new Date(event.start).getTime())
+          (new Date(event.endDate).getTime() - new Date(event.startDate).getTime())
       )
-    : new Date(event.end);
+    : new Date(event.endDate);
 
   const isEventInPast = isPast(displayEnd);
 
@@ -115,17 +113,12 @@ export function EventItem({
 
   // Use the provided currentTime (for dragging) or the event's actual time
   const displayStart = useMemo(() => {
-    return currentTime || new Date(event.start);
-  }, [currentTime, event.start]);
+    return event.startTime;
+  }, [event.startTime]);
 
   const displayEnd = useMemo(() => {
-    return currentTime
-      ? new Date(
-          new Date(currentTime).getTime() +
-            (new Date(event.end).getTime() - new Date(event.start).getTime())
-        )
-      : new Date(event.end);
-  }, [currentTime, event.start, event.end]);
+    return event.endTime;
+  }, [event.startTime, event.endTime]);
 
   // Calculate event duration in minutes
   const durationMinutes = useMemo(() => {
@@ -137,13 +130,11 @@ export function EventItem({
 
     // For short events (less than 45 minutes), only show start time
     if (durationMinutes < 45) {
-      return formatTimeWithOptionalMinutes(displayStart);
+      return displayStart;
     }
 
     // For longer events, show both start and end time
-    return `${formatTimeWithOptionalMinutes(
-      displayStart
-    )} - ${formatTimeWithOptionalMinutes(displayEnd)}`;
+    return `${displayStart} - ${displayEnd}`;
   };
 
   if (view === "month") {
@@ -168,7 +159,7 @@ export function EventItem({
           <span className="truncate">
             {!event.allDay && (
               <span className="truncate font-normal opacity-70 sm:text-[11px]">
-                {formatTimeWithOptionalMinutes(displayStart)}{" "}
+                {displayStart}{" "}
               </span>
             )}
             {event.title}
@@ -203,7 +194,7 @@ export function EventItem({
             {event.title}{" "}
             {showTime && (
               <span className="opacity-70">
-                {formatTimeWithOptionalMinutes(displayStart)}
+                {displayStart}
               </span>
             )}
           </div>
@@ -229,7 +220,7 @@ export function EventItem({
         getEventColorClasses(eventColor),
         className
       )}
-      data-past-event={isPast(new Date(event.end)) || undefined}
+      data-past-event={isPast(new Date(event.endDate)) || undefined}
       onClick={onClick}
       onMouseDown={onMouseDown}
       onTouchStart={onTouchStart}
@@ -242,8 +233,8 @@ export function EventItem({
           <span>All day</span>
         ) : (
           <span className="uppercase">
-            {formatTimeWithOptionalMinutes(displayStart)} -{" "}
-            {formatTimeWithOptionalMinutes(displayEnd)}
+            {displayStart} -{" "}
+            {displayEnd}
           </span>
         )}
         {event.location && (

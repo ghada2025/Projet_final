@@ -7,13 +7,13 @@ import {
   AccordionContent,
   AccordionItem,
 } from "@/components/ui/accordion";
+import { useEffect, useState } from "react";
 import { Input } from "./ui/input";
-import { useState } from "react";
 
 // const items = [
 //   {
 //     id: "1",
-//     status: "Done",
+//     submission.status: "Done",
 //     title: "Shapes Hunt!",
 //     sub: "Mathematics",
 //     content:
@@ -29,7 +29,7 @@ import { useState } from "react";
 //   {
 //     id: "3",
 //     title: "Grow a Bean Plant",
-//     status: "Done",
+//     submission.status: "Done",
 //     sub: "Biology",
 //     content:
 //       "Plant a dry bean in cotton and keep it by a window. Watch it grow for a week. Draw what you see each day.",
@@ -52,7 +52,7 @@ import { useState } from "react";
 //     id: "6",
 //     title: "Weather Report",
 //     sub: "Geography",
-//     status: "Done",
+//     submission.status: "Done",
 
 //     content:
 //       "Check the weather for 3 days. Was it sunny, rainy, or cloudy? Make a weather chart and draw pictures to match each day.",
@@ -67,11 +67,11 @@ import { useState } from "react";
 // ];
 
 export default function Assignments({ items }: { items: any[] }) {
-
   function handleClick(key: number) {
     const answer = inputValue[key];
     const assignmentId = items[key].id;
-    if (isSubmitted[key] === 1) {
+    
+    if (isSubmitted[key] === 0) {
       fetch("http://localhost:5007/assignment/submit", {
         method: "POST",
         credentials: "include",
@@ -80,8 +80,7 @@ export default function Assignments({ items }: { items: any[] }) {
         },
         body: JSON.stringify({ answer: answer, assignmentId: assignmentId }),
       });
-    }
-    else{
+    } else {
       fetch("http://localhost:5007/assignment/submit", {
         method: "PUT",
         credentials: "include",
@@ -92,19 +91,45 @@ export default function Assignments({ items }: { items: any[] }) {
       });
     }
   }
-
+  
   const [submission, setSubmission] = useState<number[]>([]);
-  const [inputValue, setInputValue] = useState<string[]>([]);
-  const [isSubmitted, setIsSubmitted] = useState<number[]>(Array(items.length).fill(0));
 
+  useEffect(() => {
+    const submittedIndexes = items
+      .map((item, index) => (item?.submission?.answer ? index : -1))
+      .filter((index) => index !== -1);
+    setSubmission(submittedIndexes);
+  }, [items]);
+
+  
+  const [inputValue, setInputValue] = useState<string[]>(
+    items.map((item) => item?.submission?.answer)
+  );
+  
+  const [isSubmitted, setIsSubmitted] = useState<number[]>([]);
+  useEffect(() => {
+    if (items.length > 0) {
+      setIsSubmitted(Array(items.length).fill(0));
+    }
+  }, [items]);
+  
+  useEffect(() => {
+    const fixedLength = items.length;
+    const filledArray = Array.from(
+      { length: fixedLength },
+      (_, i) => items[i]?.submission?.answer ?? ""
+    );
+    setInputValue(filledArray);
+  }, [items]);
+  
   const handleSubmition = ({ index }: { index: number }) => {
     if (submission.includes(index)) {
       setSubmission((prev) => prev.filter((i) => i !== index));
-      items[index].status = "";
+      items[index].submission.status = "upcoming";
     }
     if (!submission.includes(index)) {
       setSubmission((prev) => [...prev, index]);
-      items[index].status = "Done";
+      items[index].submission.status = "Done";
     }
   };
 
@@ -117,24 +142,26 @@ export default function Assignments({ items }: { items: any[] }) {
               <AccordionPrimitive.Header className="flex">
                 <AccordionPrimitive.Trigger className="focus-visible:border-ring focus-visible:ring-ring/50 flex flex-1 items-center justify-between rounded-md py-2 text-left text-[15px] leading-6 font-semibold transition-all outline-none focus-visible:ring-[3px] [&[data-state=open]>svg]:rotate-90">
                   <span className="flex flex-col">
-                    <span className="header-p-font font-bold">
+                    <span className="header-p-font font-bold line-clamp-1">
                       {item.title}
                     </span>
                     {item.sub && (
-                      <span className="p-font font-semibold">{item.sub}</span>
+                      <span className="p-font font-semibold">
+                        {item.description}
+                      </span>
                     )}
                   </span>
                   <div className="flex items-center justify-center nav-gap">
                     <div
                       className={`py-[0.6vw] w-[8.5vw] p-font-2 text-center ${
-                        item.status == "Done"
+                        item.submission.status == "Done"
                           ? "bg-[var(--sub-green)]"
                           : "bg-[var(--sub-orange)]"
                       } rounded-3xl text-[var(--main-${
-                        item.status == "Done" ? "green" : "orange"
+                        item.submission.status == "Done" ? "green" : "orange"
                       })] font-semibold`}
                     >
-                      {item.status === "Done" ? "Done" : "Upcoming"}
+                      {item.submission.status === "Done" ? "Done" : "Upcoming"}
                     </div>
                     <ChevronRightIcon
                       size={16}
@@ -145,7 +172,7 @@ export default function Assignments({ items }: { items: any[] }) {
                 </AccordionPrimitive.Trigger>
               </AccordionPrimitive.Header>
               <AccordionContent className="text-muted-foreground pb-2">
-                <div className="header-p-padding">{item.content}</div>
+                <div className="header-p-padding">{item.description}</div>
                 <div className="*:not-first:mt-2">
                   <div className="flex rounded-md shadow-xs">
                     <Input
@@ -181,9 +208,8 @@ export default function Assignments({ items }: { items: any[] }) {
                             const newArr = [...prev];
                             newArr[key] = newArr[key] + 1;
                             return newArr;
-                          }
-                          ); 
-                          handleClick(key);                       
+                          });
+                          handleClick(key);
                         }}
                         className="bg-[var(--main-orange)] font-semibold border-3 border-black border-l-0 cursor-pointer border-b-5 border-r-5 text-foreground hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 inline-flex items-center rounded-e-md px-3 text-sm  transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       >

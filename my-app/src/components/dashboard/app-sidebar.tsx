@@ -1,0 +1,151 @@
+"use client";
+import * as React from "react";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
+} from "@/components/dashboard/sidebar";
+import {
+  RiLogoutBoxLine,
+  RiHome2Line,
+  RiClipboardLine,
+  RiBookLine,
+  RiChat4Line,
+  RiGraduationCapLine,
+  RiBriefcaseLine,
+} from "@remixicon/react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+// This is sample data.
+const data = {
+  navMain: [
+    {
+      title: "Sections",
+      url: "#",
+      items: [
+        {
+          title: "Home",
+          url: "#",
+          icon: RiHome2Line,
+          isActive: true,
+        },
+        {
+          title: "Classes",
+          url: "#",
+          icon: RiClipboardLine,
+          isActive: false,
+        },
+        {
+          title: "Courses",
+          url: "#",
+          icon: RiBookLine,
+          isActive: false,
+        },
+        {
+          title: "Assignments",
+          url: "#",
+          icon: RiBriefcaseLine,
+          isActive: false,
+        },
+        {
+          title: "Chat",
+          url: "#",
+          icon: RiChat4Line,
+          isActive: false,
+        },
+      ],
+    },
+  ],
+};
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname();
+  const [active, setActive] = React.useState<string>();
+
+  React.useEffect(() => {
+    if (pathname) {
+      const segments = pathname.split("/").filter(Boolean);
+      const currentFolder = segments[segments.length - 1];
+
+      const found = data.navMain[0].items.find(
+        (item) => item.title.toLowerCase() === currentFolder.toLowerCase()
+      );
+
+      setActive(found?.title); // or setActive(found) if you want the whole object
+    }
+  }, [pathname]);
+
+  return (
+    <Sidebar {...props}>
+      <SidebarHeader>
+        <div className="py-4 flex items-center gap-3">
+          <Image src={"/logo.png"} alt="logo" width={30} height={30}></Image>
+          <h2 className="font-bold text-xl">School Name</h2>
+        </div>
+        <hr className="border-t border-border mx-2 -mt-px" />
+      </SidebarHeader>
+      <SidebarContent className="pt-20">
+        {/* We create a SidebarGroup for each parent. */}
+        {data.navMain.map((item) => (
+          <SidebarGroup key={item.title}>
+            <SidebarGroupLabel className="uppercase text-black font-semibold text-md mb-8">
+              {item.title}
+            </SidebarGroupLabel>
+            <SidebarGroupContent className="px-2">
+              <SidebarMenu>
+                {item.items.map((item, key) => (
+                  <SidebarMenuItem key={key}>
+                    <Link href={`/teacher-dashboard/${item.title}`}>
+                      <SidebarMenuButton
+                        asChild
+                        className="group/menu-button font-medium gap-3 h-9 rounded-md bg-gradient-to-r hover:bg-blue-300 hover:from-blue-300 hover:to-blue-200 hover:text-white data-[active=true]:from-blue-500 data-[active=true]:to-blue-300 data-[active=true]:text-white [&>svg]:size-auto text-black"
+                        isActive={active===item.title}
+                      >
+                        <div>
+                          {item.icon && (
+                            <item.icon
+                              className=" group-data-[active=true]/menu-button:text-white text-black group-hover/menu-button:text-white"
+                              size={22}
+                              aria-hidden="true"
+                            />
+                          )}
+                          <span>{item.title}</span>
+                        </div>
+                      </SidebarMenuButton>
+                    </Link>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
+      </SidebarContent>
+      <SidebarFooter>
+        <hr className="border-t border-border mx-2 -mt-px" />
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton className="font-medium gap-3 h-9 rounded-md bg-gradient-to-r hover:bg-transparent hover:from-sidebar-accent hover:to-sidebar-accent/40 data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto">
+              <RiLogoutBoxLine
+                className="text-muted-foreground/60 group-data-[active=true]/menu-button:text-primary"
+                size={22}
+                aria-hidden="true"
+              />
+              <span>Sign Out</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
+  );
+}

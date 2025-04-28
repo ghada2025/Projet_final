@@ -10,7 +10,7 @@ import { EventItem } from "./event-item";
 
 interface AgendaViewProps {
   currentDate: Date;
-  events: CalendarEvent[];
+  events: any;
   onEventSelect: (event: CalendarEvent) => void;
 }
 
@@ -24,7 +24,7 @@ export function AgendaView({
     console.log("Agenda view updating with date:", currentDate.toISOString());
     return Array.from({ length: AgendaDaysToShow }, (_, i) =>
       addDays(new Date(currentDate), i)
-    );
+    ); 
   }, [currentDate]);
 
   const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
@@ -37,6 +37,8 @@ export function AgendaView({
   const hasEvents = days.some(
     (day) => getAgendaEventsForDay(events, day).length > 0
   );
+
+  console.log(hasEvents)
 
   return (
     <div className="border-border/70 border-t px-4">
@@ -69,7 +71,7 @@ export function AgendaView({
                 {format(day, "d MMM, EEEE")}
               </span>
               <div className="mt-6 space-y-2">
-                {dayEvents.map((event) => (
+                {dayEvents.map((event:any) => (
                   <EventItem
                     key={event.id}
                     event={event}

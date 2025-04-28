@@ -4,8 +4,10 @@ import Password from "@/components/password";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const router = useRouter();
   const elements = [
     {
       status: "teacher",
@@ -23,59 +25,26 @@ export default function Login() {
     },
   ];
 
-  type User = {
-    email: string;
-    password: string;
-  };
-
-  const [user, setUser] = useState<User>({
-    email: "",
-    password: "",
-  });
-
-  const handleLoginSubmit = async () => {
-    try {
-      const response = await fetch(`http://localhost:5007/${element.status}/login`, {
-        method: "POST",
-        credentials: "include", 
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: "test@example.com",
-          password: "password123",
-        }),
-      });
-  
-      if (!response.ok) {
-        throw new Error("Login failed");
-      }
-  
-      const data = await response.json();
-      console.log(data); // e.g. "Login successful"
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
   type FormData = {
     email: string;
     password: string;
   };
 
   const [formData, setFormData] = useState<FormData>({
-    email: user.email || "",
-    password: user.password || "",
+    email: "",
+    password: "",
   });
 
   const [isValid, setIsValid] = useState(true);
   const [isCorrect, setIsCorrect] = useState(true);
   const [index, setIndex] = useState(0);
   const [element, setElement] = useState(elements[index]);
-  function handleLogin() {
-    setIndex((index + 1) % 2);
-    setElement(elements[index]);
-  }
+
+  const handleLogin = () => {
+    const newIndex = (index + 1) % 2;
+    setIndex(newIndex);
+    setElement(elements[newIndex]);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -88,89 +57,115 @@ export default function Login() {
     // Email validation
     if (name === "email") {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      setIsValid(value? emailRegex.test(value):true);
+      setIsValid(value ? emailRegex.test(value) : true);
     }
 
-    // Password validation
-    if (name === "password") {
-      const updatedPassword = value;
-      const passwordIsLongEnough = updatedPassword.length >= 8;
-      const passwordHasUpperCase = /[A-Z]/.test(updatedPassword);
-      const passwordHasLowerCase = /[a-z]/.test(updatedPassword);
-      const passwordHasNumber = /\d/.test(updatedPassword);
-      const passwordHasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(
-        updatedPassword
-      );
-      const passwordIsValid =
-        passwordIsLongEnough &&
-        passwordHasUpperCase &&
-        passwordHasLowerCase &&
-        passwordHasNumber &&
-        passwordHasSpecialChar;
-      setIsCorrect(value? passwordIsValid: true);
-    }
+    // Password validation (optionnel à activer si besoin)
+    // if (name === "password") {
+    //   const passwordIsValid =
+    //     value.length >= 8 &&
+    //     /[A-Z]/.test(value) &&
+    //     /[a-z]/.test(value) &&
+    //     /\d/.test(value) &&
+    //     /[!@#$%^&*(),.?":{}|<>]/.test(value);
+    //   setIsCorrect(value ? passwordIsValid : true);
+    // }
   };
 
+  const handleLoginSubmit = async () => {
+    const currentStatus = elements[index].status;
+  
+    try {
+      const response = await fetch(`http://localhost:5007/${currentStatus}/login`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+  
+      const data = await response.json();
+      console.log("Response JSON:", data);
+  
+      if (!response.ok) {
+        throw new Error("Login failed");
+      }
+  
+      router.push(currentStatus === "teacher" ? `/teacher-dashboard/Home` : `/student-dashboard`);
+    } catch (error) {
+      console.error("Login error:", error);
+    }
+  };
+  
+  
+  
   return (
     <>
-      <div className="w-[100vw] h-screen flex ">
-        <div className="relative w-4/10 h-screen">
-          <Image src={`${element.mainImage}`} alt="main image" fill></Image>
+      <div className="w-[100vw] h-screen flex">
+        {/* Side Image - Hidden on screens <= 700px */}
+        <div className="relative w-4/10 h-screen hidden md:block">
+          <Image src={`${element.mainImage}`} alt="main image" fill />
         </div>
-        <div className="w-6/10 flex flex-col justify-center items-center">
-          <div>
+        
+        {/* Main Content */}
+        <div className="w-full flex flex-col justify-center items-center md:w-6/10">
+          <div className="w-[65vw] md:w-[65%]">
             <div className="flex nav-gap mb-[10vh]">
               <div
-                onClick={() => handleLogin()}
-                className="flex flex-col items-center"
+                onClick={handleLogin}
+                className="flex flex-col items-center cursor-pointer"
               >
                 <Image
                   src={element.student}
                   alt="student"
                   width={60}
                   height={60}
-                ></Image>
+                />
                 <p className="header-p-font">Student</p>
               </div>
               <div
-                onClick={() => handleLogin()}
-                className="flex flex-col items-center"
+                onClick={handleLogin}
+                className="flex flex-col items-center cursor-pointer"
               >
                 <Image
                   src={element.teacher}
                   alt="teacher"
                   width={60}
                   height={60}
-                ></Image>
+                />
                 <p className="header-p-font">Teacher</p>
               </div>
             </div>
             <div>
               <h1 className="header-font">{element.title}</h1>
-              <p className="header-p-font">Login to you account to continue</p>
+              <p className="header-p-font">Login to your account to continue</p>
             </div>
             <div>
               <InputContact
                 isValid={isValid}
                 onChange={handleChange}
                 name="email"
-              ></InputContact>
+              />
               <Password
                 isCorrect={isCorrect}
                 num={1}
                 onChange={handleChange}
                 name="password"
-              ></Password>
+              />
               <p className="mt-[2.5vh] text-blue-500 cursor-pointer p-font">
-                <Link href={"/reset-paasword"}>I forget my password !</Link>
+                <Link href={"/reset-password"}>I forget my password !</Link>
               </p>
-              <Link href={"/"}>
+              <Link
+                href={elements[index].status === "teacher" ? "/teacher-dashboard/Home" : "/student-dashboard"}
+              >
                 <button
                   className="custom-button w-full my-[2vw] height-input header-p-font"
                   disabled={!isValid || !isCorrect}
-                  onClick={() => {
-                    handleLoginSubmit();
-                  }}
+                  onClick={handleLoginSubmit}
                 >
                   Login
                 </button>
@@ -183,5 +178,5 @@ export default function Login() {
         </div>
       </div>
     </>
-  );
+  );    
 }

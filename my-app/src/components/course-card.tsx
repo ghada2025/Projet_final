@@ -10,9 +10,9 @@ export default function CourseCard({
       <div
         className={`flex items-center justify-center h-[10vw] bg-[var(--main-${course.color})] rounded-lg w-full`}
       >
-        <div className="relative w-[6vw] h-[6vw]">
+        <div className="relative w-[7vw] h-[7vw]">
           <Image
-            src={course.image}
+            src={"/calculating.png"}
             alt="Course title"
             fill
             className="object-cover"
@@ -21,10 +21,9 @@ export default function CourseCard({
       </div>
       <div className="header-p-padding">
         <div className="flex justify-between items-center">
-        <h2 className="h2-font">{course.title}</h2>
-        <p className={`p-font font-semibold text-[var(--main-${course.status=="Done"?"green":"orange"})]`}>{course.status}</p>
+        <h2 className="md:text-lg line-clamp-1 text-sm font-bold">{course.title}</h2>
         </div>
-        <p className="p-font text-neutral-400 line-clamp-2 mt-3">
+        <p className="md:text-sm text-neutral-400 line-clamp-2 mt-3 text-xs font-bold">
           {course.description}
         </p>
       </div>

@@ -6,15 +6,16 @@ export interface CalendarEvent {
   description?: string
   start: Date
   end: Date
+  startTime?: string
+  endTime?:string
   allDay?: boolean
   color?: EventColor
   location?: string
 }
 
 export type EventColor =
-  | "sky"
-  | "amber"
-  | "violet"
-  | "rose"
-  | "emerald"
+  | "blue"
+  | "red"
+  | "purple"
+  | "green"
   | "orange"

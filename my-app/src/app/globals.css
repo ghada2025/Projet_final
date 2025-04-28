@@ -162,7 +162,7 @@ html {
   transform: scale(1.05);
 }
 .header-font {
-  font-size: clamp(10px, 4.5vw, 55px);
+  font-size: clamp(30px, 4.5vw, 55px);
   font-weight: bold;
 }
 .header-p-padding {
@@ -175,24 +175,24 @@ html {
 }
 
 .header-p-font {
-  font-size: clamp(7px, 2vw, 20px);
+  font-size: clamp(15px, 2vw, 20px);
 }
 .p-font {
-  font-size: clamp(10px, 1.7vw, 15px);
+  font-size: clamp(12px, 1.7vw, 15px);
 }
 .p-font-2 {
-  font-size: clamp(6px, 1.4vw, 14px);
+  font-size: clamp(10px, 1.4vw, 14px);
 }
 .header-h3-font {
-  font-size: clamp(14px, 2.3vw, 30px);
+  font-size: clamp(20px, 2.3vw, 30px);
   font-weight: bold;
 }
 .h2-font {
-  font-size: clamp(12px, 2vw, 25px);
+  font-size: clamp(18px, 2vw, 25px);
   font-weight: bold;
 }
 .header-width{
-  width: clamp(100px, 50vw, 600px);
+  width: clamp(250px, 50vw, 600px);
 }
 .nav-gap{
   gap: clamp(10px, 3vw, 40px);
@@ -212,7 +212,7 @@ html {
   width: clamp(200px,35vw,800px);
 }
 .height-grade{
-  height: clamp(100px,35vw,350px);
+  height: clamp(200px,35vw,350px);
 }
 .height-input{
   height: clamp(40px,4vw,50px);
@@ -277,4 +277,22 @@ html {
 
 .scroll-container::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
+}
+
+@media (min-width: 470px) and (max-width: 700px) {
+  .custom-width {
+    width: 50% !important;
+  }
+}
+@media (min-width: 680px) {
+  .custom-p {
+    font-size: clamp(20px, 2.3vw, 30px);
+    font-weight: bold;
+  }
+}
+@media (max-width: 1000px) {
+  .votre-classe {
+    display: flex;
+    flex-direction: column;
+  }
 }
