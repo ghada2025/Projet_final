@@ -1,6 +1,7 @@
 "use client";
 import Assignments from "@/components/assignments";
 import Calendar from "@/components/calendar";
+import { CalendarEvent } from "@/components/calendar/types";
 import CourseCard from "@/components/course-card";
 import Header from "@/components/header";
 import Link from "next/link";

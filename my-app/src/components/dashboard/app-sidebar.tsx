@@ -25,6 +25,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation"
+
 
 // This is sample data.
 const data = {
@@ -70,6 +72,7 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
+  const router = useRouter();
   const [active, setActive] = React.useState<string>();
 
   React.useEffect(() => {
@@ -134,7 +137,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <hr className="border-t border-border mx-2 -mt-px" />
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton className="font-medium gap-3 h-9 rounded-md bg-gradient-to-r hover:bg-transparent hover:from-sidebar-accent hover:to-sidebar-accent/40 data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto">
+            <SidebarMenuButton 
+              onClick={() => {
+                fetch("http://localhost:5007/teacher/logout", {
+                  method: "GET",
+                  credentials: "include",
+                })
+                router.push("/")
+              }} 
+              className="font-medium gap-3 h-9 rounded-md bg-gradient-to-r hover:bg-transparent hover:from-sidebar-accent hover:to-sidebar-accent/40 data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto">
               <RiLogoutBoxLine
                 className="text-muted-foreground/60 group-data-[active=true]/menu-button:text-primary"
                 size={22}

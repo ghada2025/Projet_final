@@ -11,7 +11,7 @@ interface AddClassProps {
 
 
 export default function AddClass({ onClick, isCourse, isAssignment }: AddClassProps) {
-  const maxSizeMB = 40;
+  const maxSizeMB = 10;
 
   return (
     <div

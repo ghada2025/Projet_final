@@ -1,14 +1,14 @@
 "use client";
 import CourseDetails from "@/components/course-details";
 import Header from "@/components/header";
-import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Quiz() {
   const [quizzes, setQuizzes] = useState<any>([]);
   const [quizzId, setQuizzId] = useState<string | null>(null);
   const { id } = useParams<{ id: string }>();
+  const router = useRouter();
   const [coursedet, setCoursedet] = useState<any[]>([]);
   const [course, setCourse] = useState<any>(null);
   const [last, setLast] = useState(0);
@@ -23,12 +23,13 @@ export default function Quiz() {
           }),
         ]);
 
-        if (!courseRes.ok ) {
-          throw new Error("courseRes fetches failed");
+        if (!courseRes.ok) {
+          throw new Error("courseRes fetch failed");
         }
-        if (!coursedetRes.ok ) {
-          throw new Error("coursedetRes fetches failed");
+        if (!coursedetRes.ok) {
+          throw new Error("coursedetRes fetch failed");
         }
+
         const courseData = await courseRes.json();
         const coursedetData = await coursedetRes.json();
 
@@ -48,7 +49,7 @@ export default function Quiz() {
         setCoursedet(cleanCoursedet);
         setCourse(cleanCourse);
         setQuizzes(cleanCourse?.quiz?.questions || []);
-        setQuizzId(cleanCourse?.quiz?.questions._id || "");
+        setQuizzId(cleanCourse?.quiz?._id || "");
       } catch (err) {
         console.error("Fetching error:", err);
       }
@@ -135,11 +136,14 @@ export default function Quiz() {
     const finalScore = calculateScore();
     setScore(finalScore);
     setIsSubmitted(true);
+
+    if (!quizzId) return;
+
     await fetch(`http://localhost:5007/quiz/submit/${quizzId}`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ score: finalScore, status: "Done" }),
+      body: JSON.stringify({ score: finalScore }),
     });
   }
 
@@ -193,15 +197,21 @@ export default function Quiz() {
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center h-full">
-                  <h2 className="header-font">Your score is <span className={`text-[var(--main-${score < 50 ? "red" : "green"})]`}>{score}%</span></h2>
+                  <h2 className="header-font">
+                    Your score is{" "}
+                    <span className={`text-[var(--main-${score < 50 ? "red" : "green"})]`}>
+                      {score}%
+                    </span>
+                  </h2>
                   <p className="h2-font header-p-padding">
                     Thank you for taking the quiz!
                   </p>
-                  <Link href={"/student-dashboard"} onClick={handleSubmit}>
-                    <button className="custom-button header-p-font">
-                      Finish Courses
-                    </button>
-                  </Link>
+                  <button
+                    className="custom-button header-p-font"
+                    onClick={() => router.push("/student-dashboard")}
+                  >
+                    Go to Home
+                  </button>
                 </div>
               )}
             </div>
