@@ -5,7 +5,8 @@ import {
     getMyProfile,       // 👤 Récupération du profil 
     updateStudentGrade,  // ✏️ Mise à jour du grade
     studentsWithoutClass,
-    getAllStudents
+    getAllStudents,
+    logoutStudent
 } from "../controllers/Students.js";
 
 const router = express.Router();
@@ -16,6 +17,7 @@ router.get("/me", getMyProfile);// 👤
 router.put("/grade/:studentId", updateStudentGrade);// ✏️ 
 router.get("/", studentsWithoutClass) // ✅  récupérer les étudiants sans classe
 router.get("/all" , getAllStudents)
+router.get("/logout", logoutStudent)
 
 export { router as studentRouter };
 

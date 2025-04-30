@@ -64,7 +64,6 @@ export async function registerStudent(req, res) {
     }
 }
 
-
 export async function loginStudent(req, res) {
     try {
         const { email, password } = req.body;
@@ -83,13 +82,6 @@ export async function loginStudent(req, res) {
             return res.status(400).json({ message: "Email ou mot de passe invalide ❌" });
         }
 
-        res.clearCookie('teacher', { path: '/', 
-        httpOnly: true, 
-        sameSite: 'lax', 
-        secure: false,   
-        });
-        
-
         // 🍪 Création du cookie de session
         const options = {
             maxAge: MILLISECONDS_IN_A_DAY * 14, // 📅 14 jours
@@ -106,7 +98,6 @@ export async function loginStudent(req, res) {
         res.status(500).json({ message: "Erreur lors de la connexion 🔐" });
     }
 }
-
 
 export async function updateStudentGrade(req, res) {
     try {
@@ -196,5 +187,15 @@ export async function getAllStudents(req, res) {
     } catch (error) {
         console.error("❌ Erreur lors de la recherche des étudiants :", error);
         res.status(500).json({ message: "Erreur serveur", error: error.message });
+    }
+}
+
+export async function logoutStudent(req, res) {
+    try {
+        res.clearCookie('student')
+        res.json({ message: "Logged out" })
+    } catch (error) {
+        console.log(error)
+        res.json({ message: "error in logout controller" })
     }
 }

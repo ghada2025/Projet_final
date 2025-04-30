@@ -4,7 +4,8 @@ import {
     loginTeacher,       // 🔑 Connexion d'un teacher
     getMyProfile,
     getTeacherClasses,
-    getTeacherStats,       // 👤 Récupération du profil 
+    getTeacherStats,
+    logoutTeacher,       // 👤 Récupération du profil 
 } from "../controllers/Teachers.js";
 
 const router = express.Router();
@@ -14,5 +15,6 @@ router.post("/login", loginTeacher);// 🔑
 router.get("/me", getMyProfile);// 👤 
 router.get("/classe" , getTeacherClasses) // ✅  récupérer les classes d'un enseignant 
 router.get("/stats" , getTeacherStats)
+router.get("/logout", logoutTeacher)
 
 export { router as teacherRouter };

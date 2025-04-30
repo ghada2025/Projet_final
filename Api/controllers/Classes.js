@@ -32,7 +32,7 @@ export async function createClass(req, res) {
         }
 
         // ✅ Vérifier que le nombre d'étudiants ne dépasse pas 40
-        if (students.length > 40) {
+        if (students.length >= 10) {
             return res.status(400).json({ message: "🚫 Une classe ne peut pas contenir plus de 40 étudiants." });
         }
 
