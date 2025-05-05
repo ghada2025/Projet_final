@@ -10,11 +10,6 @@ const messageSchema = new mongoose.Schema({
         required: true,
         maxlength: 500,
     },
-    student: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Student",
-        required: false, 
-    },
 }, { timestamps: true });
 
 export const Message = mongoose.model("Message", messageSchema);
