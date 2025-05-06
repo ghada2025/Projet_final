@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/resizable";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Image, MessageCircle, Send, Smile } from "lucide-react";
+import Picker from "@emoji-mart/react";
+import data from "@emoji-mart/data";
 
 
 type Student = {
@@ -49,6 +51,7 @@ export default function Chat() {
     const [newMessage, setNewMessage] = useState("");
     const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
     // obtenir socket io
     useEffect(() => {
@@ -85,7 +88,7 @@ export default function Chat() {
     // obtenir all messages d'une conversation
     useEffect(() => {
         if (!selectedConversation) return;
-        
+
         async function fetchMessages() {
             try {
                 const res = await fetch(`http://localhost:5007/chat/messages/${selectedConversation}`, {
@@ -190,9 +193,20 @@ export default function Chat() {
                             </div>
                             </ScrollArea>
                             <div className="flex gap-2 p-5 border-t">
-                                <Button size="icon" variant="outline">
+                                <Button size="icon" variant="outline" onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
                                     <Smile />
                                 </Button>
+                                {showEmojiPicker && (
+                                    <div className="absolute top-110 left-95 z-10">
+                                        <Picker
+                                        data={data}
+                                        theme="light"
+                                        onEmojiSelect={(emoji: any) => {
+                                            setNewMessage((prev) => prev + emoji.native);
+                                        }}
+                                        />
+                                    </div>
+                                )}
                                 <input
                                     type="text"
                                     placeholder="Écrire un message..."
