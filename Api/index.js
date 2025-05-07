@@ -6,7 +6,7 @@ import { connectDB } from "./config/connect-db.js";
 import cookieParser from "cookie-parser";
 import { teacherRouter } from "./routers/Teachers.js";
 import { studentRouter } from "./routers/Students.js";
-import { classRouter } from "./routers/classes.js";
+import { classRouter } from "./routers/Classes.js";
 import { courseRouter } from "./routers/Courses.js";
 import { eventRouter } from "./routers/Events.js";
 import { quizRouter } from "./routers/Quizs.js";
