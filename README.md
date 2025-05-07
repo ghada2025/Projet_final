@@ -1,88 +1,176 @@
-# Création d'un fichier README.md avec le contenu défini
-readme_content = """
-# 🎓 School Platform - Full Stack Web App
+# 🎓 Liberty School – Full Stack Web App
 
-Une plateforme éducative moderne développée en MERN Stack permettant la gestion des cours, devoirs, quiz, et la communication entre enseignants et étudiants.
-
-## 🌟 Sommaire
-
-- [🎯 Objectif du Projet](#-objectif-du-projet)
-- [🚀 Fonctionnalités](#-fonctionnalités)
-- [🛠️ Technologies utilisées](#️-technologies-utilisées)
-- [📁 Structure du projet](#-structure-du-projet)
-- [🖼️ Captures d’écran](#️-captures-décran)
-- [👩‍💻 L'équipe](#-léquipe)
-- [📦 Installation et démarrage](#-installation-et-démarrage)
-- [📌 Remarques](#-remarques)
+A modern educational platform built with the **MERN stack**, enabling course management, assignments, quizzes, and real-time communication between teachers and students.
 
 ---
 
-## 🎯 Objectif du Projet
+## 🌟 Table of Contents
 
-Créer une plateforme web intuitive qui facilite l’interaction entre les enseignants et les étudiants à travers :
-
-- Une gestion des classes et du contenu pédagogique
-- Des devoirs, quiz et événements
-- Une messagerie instantanée entre étudiants et enseignants
-
----
-
-## 🚀 Fonctionnalités
-
-### 👩‍🏫 Rôle Enseignant
-- Authentification sécurisée
-- Création de classes, cours, devoirs, quiz, événements
-- Visualisation des soumissions des étudiants
-- Chat en temps réel avec les étudiants
-
-### 🧑‍🎓 Rôle Étudiant
-- Authentification
-- Accès aux cours, devoirs et quiz selon la classe
-- Soumission des devoirs
-- Participation aux quiz
-- Chat en temps réel avec l’enseignant
+- [🎯 Project Objective](#-project-objective)
+- [🚀 Features](#-features)
+- [🛠️ Technologies Used](#-technologies-used)
+- [📁 Project Structure](#-project-structure)
+- [🖼️ Screenshots](#-screenshots)
+- [👩‍💻 The Team](#-the-team)
+- [📦 Installation & Getting Started](#-installation--getting-started)
+- [📌 Notes](#-notes)
+- [💡 License](#-license)
 
 ---
 
-## 🛠️ Technologies utilisées
+## 🎯 Project Objective
 
-### Frontend
-- React.js (avec Hooks)
-- Tailwind CSS
-- Socket.IO Client
-- Axios
+To create an intuitive and responsive web platform that facilitates seamless interaction between teachers and students by offering:
 
-### Backend
-- Node.js
-- Express.js
-- MongoDB + Mongoose
-- Socket.IO Server
-- Cookie-parser, bcrypt, jsonwebtoken
-
-### Autres
-- Git & GitHub
-- Postman (test API)
-- MongoDB Atlas
+- 📘 Classroom and content management  
+- 📑 Assignment, quiz, and event creation  
+- 💬 Real-time messaging system  
+- 🔒 Role-based access with secure login
 
 ---
 
-## 📁 Structure du projet
+## 🚀 Features
+
+### 👩‍🏫 Teacher Dashboard
+
+- 🔐 Secure authentication  
+- ➕ Create and manage:
+  - 👨‍🎓Students
+  - 🏫Classes  
+  - 📚Courses  
+  - 📝Assignments  
+  - ❓Quizzes  
+- 👁️ View student submissions and correct them  
+- 💬 Real-time chat with students  
+
+### 🧑‍🎓 Student Dashboard
+
+- 🔐 Login & authentication  
+- 🎓 Access materials by enrolled class (texts and videos)
+- 📄 Full course details and advancement check  
+- 📤 Submit & Update assignments  
+- 📝 Take & Revise quizzes
+- 🗓️ Create, Update & Delete events in a dedicated calendar
+- ⏰ A well detailed time table  
+- 💬 Live chat with teachers  
+
+---
+
+## 🛠️ Technologies Used
+
+### 📦 Frontend
+
+- **Next.js** (with Hooks)
+- **TypeScript**
+- **Tailwind CSS**
+- **Socket.IO Client**
+- **emoji-mart**
+- **ShadCn**
+- **Radix UI**
+- **Remix Icon**
+
+### 🧠 Backend
+
+- **Node.js**
+- **Express.js**
+- **MongoDB** + **Mongoose**
+- **Socket.IO Server**
+- **Authentication**:
+  - `bcrypt`  
+  - `Cors`  
+  - `cookie-parser`
+- **Nodemailer**
+
+### 🌐 Others
+
+- **MongoDB Atlas**
+- **Postman** – API testing
+- **Git & GitHub** – version control
+- **Vercel & Render** - Deploiyment 
+---
+
+## 📁 Project Structure
 
 ```bash
 project-root/
 │
-├── Api/                 # Backend
-│   ├── models/
-│   ├── routes/
-│   ├── controllers/
-│   ├── utils/
-│   └── server.js
+├── api/                    # Backend application
+│   ├── models/             
+│   ├── routes/             
+│   ├── controllers/        
+│   ├── config/              
+│   └── index.js           
 │
-├── Myapp/               # Frontend
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   └── App.jsx
+├── my-app/                  # Frontend (React)
+│   ├── public/
+│   └── src/
+│       ├── app/ 
+│       ├── components/        
+│       ├── hooks/          
+│       ├── lib/
+│       └── middleware.ts       
 │
 ├── README.md
 └── package.json
+
+
+```
+
+## 🖼️ Screenshots
+<div style="display:flex; flex-direction: column; align-items: center; margin:30px 0px">
+    <img src="./my-app/public/AUTH.jpg" alt="Authentication Page" width="600 " style="border-radius:16px"/>
+    <br/>
+    <img src="./my-app/public/PLATFORM.jpg" alt="Teacher & Student Dashboard" width="600" style="border-radius:16px"/>
+    <br/>
+    <img src="./my-app/public/Quiz.jpg" alt="Quiz View" width="600" style="border-radius:16px"/>
+</div >
+
+---
+
+## 👩‍💻 The Team
+
+- **Mohamed Riad Doukha**  
+- **Kheniene Ghada**
+
+---
+
+## 📦 Installation & Getting Started
+
+- **⚙️ Backend**
+```bash
+    cd Api
+    npm install
+    npm run dev
+
+```
+- **🌐 Frontend**
+
+```bash
+    cd my-app
+    npm install
+    npm install  @emoji-mart/react@1.1.1 --force
+    npm run dev
+
+```
+## 📌 Notes
+
+- 🛢️ **MongoDB** must be running locally or through **MongoDB Atlas**.
+- 🔐 All **environment variables** are required for the app to function properly.
+- 🔄 Real-time features such as **chat** rely on **WebSocket**, handled via **Socket.IO**.
+- 🧪 Backend **APIs** can be tested using tools like **Postman**.
+
+## 📄 License
+
+Copyright © 2025 **Mohamed Riad Doukha** and **Ghada Kheniene**  
+All rights reserved.
+
+This software and associated documentation files (the "Software") are the exclusive property of **Mohamed Riad Doukha** and **Ghada Kheniene**.
+
+You may not use, copy, modify, merge, publish, distribute, sublicense, or sell copies of the Software or any part of it without express written permission from the owners.
+
+❗ Unauthorized use of this software is strictly prohibited and may result in legal action.
+
+For licensing inquiries, please contact :  
+📧 [doukhamohamedriad@gmail.com](mailto:doukhamohamedriad@gmail.com)
+</br>
+📧 [khenieneghada@gmail.com](mailto:khenieneghada@gmail.com)

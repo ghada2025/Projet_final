@@ -50,14 +50,15 @@ useEffect(() => {
   fetchPosts();
 }, []);
 
-  const assignRandomColors = (classes: any[]) => {
-    const colors = ["red", "green", "blue", "orange"];
-
-    return classes.map((classItem) => ({
-      ...classItem,
-      color: colors[Math.floor(Math.random() * colors.length)],
-    }));
-  };
+const assignRandomColors = (classes: any[]) => {
+  let hash = 0;
+  let newClasses = []
+  for (let i = 0; i < classes.length; i++) {
+      hash = classes[i].name.charCodeAt(i) + ((hash << 5) - hash);
+      newClasses.push({...classes[i], color: `hsl(${hash % 360}, 70%, 60%)`})
+  }
+  return newClasses
+};
 
   const [classes, setClasses] = useState<any[]>([]);
 
@@ -77,13 +78,6 @@ useEffect(() => {
   };
 
   const [isOpen, setIsOpen] = useState(false);
-
-  const colorClasses = {
-    red: "bg-red-300 border-red-600 text-red-600",
-    green: "bg-green-300 border-green-600 text-green-600",
-    blue: "bg-blue-300 border-blue-600 text-blue-600",
-    orange: "bg-orange-300 border-orange-600 text-orange-600",
-  };
 
   return (
     <>
@@ -132,9 +126,8 @@ useEffect(() => {
                 >
                   <h2
                     className={clsx(
-                      "text-lg font-semibold border-2 rounded-full p-2",
-                      colorClasses[classItem.color as keyof typeof colorClasses]
-                    )}
+                      "text-lg border-2 rounded-full p-2"
+                    )} style={{ backgroundColor: classItem.color }}
                   >
                     {classItem.name}
                   </h2>
@@ -168,9 +161,8 @@ useEffect(() => {
             >
               <h2
                 className={clsx(
-                  "text-lg font-semibold border-2 rounded-full p-[5%]",
-                  colorClasses[classItem.color as keyof typeof colorClasses]
-                )}
+                  "text-lg border-2 rounded-full p-[5%]"
+                )} style={{ backgroundColor: classItem.color }}
               >
                 {classItem.name}
               </h2>

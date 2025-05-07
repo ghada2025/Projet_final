@@ -224,10 +224,6 @@ export async function getCoursesByQuiz(req, res) {
       quiz: { $exists: false },
     });
 
-    if (courses.length === 0) {
-      return res.status(404).json({ message: "Cours introuvables ❌" });
-    }
-
     const simplifiedCourses = courses.map((course) => ({
       id: course._id,
       subject: course.subject,

@@ -63,14 +63,16 @@ useEffect(() => {
 
 
 
-  const assignRandomColors = (classes: any[]) => {
-    const colors = ["red", "green", "blue", "orange"];
+const assignRandomColors = (classes: any[]) => {
+  let hash = 0;
+  let newClasses = []
+  for (let i = 0; i < classes.length; i++) {
+      hash = classes[i].title.charCodeAt(i) + ((hash << 5) - hash);
+      newClasses.push({...classes[i], color: `hsl(${hash % 360}, 70%, 60%)`})
+  }
+  return newClasses
+};
 
-    return classes.map((classItem) => ({
-      ...classItem,
-      color: colors[Math.floor(Math.random() * colors.length)],
-    }));
-  };
   const [assignments, setAssignments] = useState<any[]>([]);
 
   useEffect(() => {
@@ -130,12 +132,6 @@ useEffect(() => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAssign, setIsAssign] = useState(false);
 
-  const colorClasses = {
-    red: "bg-red-300 border-red-600 text-red-600",
-    green: "bg-green-300 border-green-600 text-green-600",
-    blue: "bg-blue-300 border-blue-600 text-blue-600",
-    orange: "bg-orange-300 border-orange-600 text-orange-600",
-  };
   return (
     <>
       <div className="flex flex-col gap-5 md:grid md:grid-rows-1 md:grid-cols-[30%_68.2%] mb-5">
@@ -243,9 +239,8 @@ useEffect(() => {
                 >
                   <div
                     className={clsx(
-                      "border-2 rounded-full p-3 text-sm",
-                      colorClasses[item.color as keyof typeof colorClasses]
-                    )}
+                      "border-2 rounded-full p-3 text-sm"
+                    )} style={{ backgroundColor: item.color }}
                   >
                     {index + 1}
                   </div>
@@ -281,9 +276,8 @@ useEffect(() => {
               >
                 <h2
                   className={clsx(
-                    "text-sm font-semibold border-2 rounded-full p-[5%]",
-                    colorClasses[item.color as keyof typeof colorClasses]
-                  )}
+                    "text-sm font-semibold border-2 rounded-full p-[5%]"
+                  )} style={{ backgroundColor: item.color }}
                 >
                   {index + 1}
                 </h2>

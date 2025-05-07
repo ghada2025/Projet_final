@@ -44,7 +44,7 @@ export default function Header({ show = false, chat=false }: { show?: boolean, c
     fetchData();
   }, []);
   return (
-    <header className="flex items-center justify-between flex-wrap py-7 gap-5">
+    <header className="flex items-center justify-between flex-wrap py-7 gap-5 [@media(max-width:400px)]:flex-col-reverse [@media(max-width:400px)]:items-center ">
       {/* Left Side (Welcoming block) */}
       <div className="flex items-center nav-gap">
         <Image
@@ -52,9 +52,9 @@ export default function Header({ show = false, chat=false }: { show?: boolean, c
           alt="student"
           width={60}
           height={60}
-          className="card"
+          className="card hidden [@media(min-width:450px)]:block"
         />
-        <div>
+        <div className="hidden [@media(min-width:605px)]:block">
           <h1 className="header-h3-font text-[clamp(18px,4vw,28px)]">
             Welcome back
           </h1>
@@ -67,7 +67,7 @@ export default function Header({ show = false, chat=false }: { show?: boolean, c
       {/* Middle Part (Game Icon) */}
       {show && (
         <Link href={"/student-dashboard/chat"}>
-          <div className="card hidden [@media(min-width:700px)]:block cursor-pointer">
+          <div className="card cursor-pointer">
             <Image src={"/play.png"} alt="chat" width={60} height={60} />
           </div>
         </Link>
@@ -76,7 +76,7 @@ export default function Header({ show = false, chat=false }: { show?: boolean, c
       {/* Right Side (Search + Settings) */}
       <div className="flex items-center nav-gap">
         {/* SearchBar hidden under 470px */}
-        <div className="hidden [@media(min-width:725px)]:block">
+        <div className="hidden [@media(min-width:835px)]:block">
           <SearchBar />
         </div>
 
@@ -95,7 +95,7 @@ export default function Header({ show = false, chat=false }: { show?: boolean, c
               router.push("/student-dashboard")
             }
           }}
-          className="bg-white text-center w-48 rounded-2xl h-14 relative text-black text-xl font-semibold group hidden [@media(min-width:525px)]:block"
+          className="bg-white text-center w-48 rounded-2xl h-14 relative text-black text-xl font-semibold group"
           type="button"
         >
           <div className="bg-[var(--main-green)] border-3 cursor-pointer border-black border-b-5 border-r-5 height-input rounded-xl h-12 w-1/4 flex items-center justify-center absolute left-1 top-[4px] group-hover:w-[184px] z-10 duration-500">

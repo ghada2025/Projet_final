@@ -72,57 +72,19 @@ export default function Classes() {
   }, [items]);
 
   const assignRandomColors = (classes: any[]) => {
-    const colors = ["red", "green", "blue", "orange"];
-    return classes.map((classItem) => ({
-      ...classItem,
-      color: colors[Math.floor(Math.random() * colors.length)],
-    }));
-  };
-
-  const formatDate = (date: CalendarDate | null): string => {
-    if (!date) return "";
-    const day = String(date.day).padStart(2, "0");
-    const month = String(date.month).padStart(2, "0");
-    const year = date.year;
-    return `${year}-${month}-${day}`;
-  };
-
-  const handleCreate = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    try {
-      const res = await fetch("http://localhost:5007/assignment", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title,
-          description,
-          dueDate: formatDate(selectedDate),
-          course: name,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to create course");
-      }
-
-      console.log("Course created successfully!");
-    } catch (error) {
-      console.error("Error sending course creation:", error);
+    let hash = 0;
+    let newClasses = []
+    for (let i = 0; i < classes.length; i++) {
+        hash = classes[i].title.charCodeAt(i) + ((hash << 5) - hash);
+        newClasses.push({...classes[i], color: `hsl(${hash % 360}, 70%, 60%)`})
     }
+    return newClasses
   };
 
   const getGridCols = () => {
     if (containerWidth <= originalWidth * 0.33) return "grid-cols-1";
     if (containerWidth <= originalWidth * 0.66) return "grid-cols-2";
     return "grid-cols-3";
-  };
-
-  const colorClasses = {
-    red: "bg-red-300 border-red-600 text-red-600",
-    green: "bg-green-300 border-green-600 text-green-600",
-    blue: "bg-blue-300 border-blue-600 text-blue-600",
-    orange: "bg-orange-300 border-orange-600 text-orange-600",
   };
 
 
@@ -137,7 +99,7 @@ export default function Classes() {
                 setIsOpen(true);
               }}
             />
-            {isOpen && (
+            {course.length != 0 && isOpen && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#3b3b3b]">
                 <div className="bg-white w-[90vw] max-w-[600px] rounded-lg shadow-lg p-6 relative animate-fadeIn">
                   <button
@@ -155,10 +117,7 @@ export default function Classes() {
                       <h2
                         className={clsx(
                           "text-sm font-semibold border-2 rounded-full p-3",
-                          colorClasses[
-                            classItem.color as keyof typeof colorClasses
-                          ]
-                        )}
+                        )} style={{ backgroundColor: classItem.color }}
                       >
                         {index+1}
                       </h2>
@@ -169,6 +128,19 @@ export default function Classes() {
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+            {course.length == 0 && isOpen && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#3b3b3b]">
+                <div className="bg-white w-[90vw] max-w-[600px] rounded-lg shadow-lg p-6 relative animate-fadeIn">
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="absolute top-1 right-2 text-gray-500 hover:text-gray-800 text-xl"
+                  >
+                    &times;
+                  </button>
+                  <h1 className="header-p-font font-bold">No courses without quizzes ...</h1>
                 </div>
               </div>
             )}
@@ -234,11 +206,8 @@ export default function Classes() {
                 >
                   <p
                     className={clsx(
-                      "border-2 rounded-full p-3 text-[12px]",
-                      colorClasses[
-                        courseItem.color as keyof typeof colorClasses
-                      ]
-                    )}
+                      "border-2 rounded-full p-3 text-[12px]"
+                    )} style={{ backgroundColor: courseItem.color }}
                   >
                     {courseItem.subject?.[0] || ""}
                   </p>

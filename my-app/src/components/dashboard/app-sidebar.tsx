@@ -145,7 +145,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem className="flex justify-center">
             <SidebarMenuButton
               onClick={() => {
-                fetch("http://localhost:5007/student/logout", {
+                fetch("http://localhost:5007/teacher/logout", {
                   method: "GET",
                   credentials: "include",
                 });

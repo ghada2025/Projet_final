@@ -1,31 +1,25 @@
 "use client"
-import { useEffect } from "react";
-import { CircleUserRoundIcon, XIcon } from "lucide-react";
-import { useFileUpload } from "@/hooks/use-file-upload";
-import { Button } from "@/components/ui/button";
 
-export default function Component({ onFileChange }: { onFileChange: (file: File | null) => void }) {
-  const [{ files }, { removeFile, openFileDialog, getInputProps }] = useFileUpload({
-    accept: "image/*",
-  });
+import { CircleUserRoundIcon, XIcon } from "lucide-react"
 
-  const file = files[0]?.file || null;
-  const previewUrl = files[0]?.preview || null;
+import { useFileUpload } from "@/hooks/use-file-upload"
+import { Button } from "@/components/ui/button"
 
-  useEffect(() => {
-    if (file instanceof File) {
-      onFileChange(file);
-    } else {
-      onFileChange(null);
-    }
-  }, [file, onFileChange]);
+export default function Component() {
+  const [{ files }, { removeFile, openFileDialog, getInputProps }] =
+    useFileUpload({
+      accept: "image/*",
+    })
+
+  const previewUrl = files[0]?.preview || null
+  const fileName = files[0]?.file.name || null
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="inline-flex relative">
+      <div className="relative inline-flex">
         <Button
           variant="outline"
-          className="size-10 overflow-hidden p-0 shadow-none"
+          className="relative size-10 overflow-hidden p-0 shadow-none"
           onClick={openFileDialog}
           aria-label={previewUrl ? "Change image" : "Upload image"}
         >
@@ -33,7 +27,7 @@ export default function Component({ onFileChange }: { onFileChange: (file: File 
             <img
               className="size-full object-cover"
               src={previewUrl}
-              alt="Preview"
+              alt="Preview of uploaded image"
               width={64}
               height={64}
               style={{ objectFit: "cover" }}
@@ -46,19 +40,23 @@ export default function Component({ onFileChange }: { onFileChange: (file: File 
         </Button>
         {previewUrl && (
           <Button
-            onClick={() => {
-              removeFile(files[0]?.id);
-              onFileChange(null); 
-            }}
+            onClick={() => removeFile(files[0]?.id)}
             size="icon"
-            className="absolute top-0 right-0 size-6 rounded-full border-2 shadow-none"
+            className="border-background focus-visible:border-background absolute -top-4 -right-2 size-6 rounded-full border-2 shadow-none"
             aria-label="Remove image"
           >
             <XIcon className="size-3.5" />
           </Button>
         )}
-        <input {...getInputProps()} className="sr-only" />
+        <input
+          {...getInputProps()}
+          className="sr-only"
+          aria-label="Upload image file"
+          tabIndex={-1}
+        />
       </div>
+      {fileName && <p className="text-muted-foreground text-xs">{fileName}</p>}
+      
     </div>
-  );
+  )
 }

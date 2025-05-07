@@ -11,10 +11,7 @@ type Quiz = {
   type: string;
 };
 
-export default function MultiQuizForm({courseId}:{courseId?:string}) {
-
-  const [course, setCourse]=useState("")
-  
+export default function MultiQuizForm({ courseId }: { courseId?: string }) {
   const emptyQuiz: Quiz = {
     title: "",
     question: "",
@@ -46,11 +43,15 @@ export default function MultiQuizForm({courseId}:{courseId?:string}) {
       const key = name as keyof Quiz;
 
       if (key === "answers") {
-        updated[currentPhase].answers = value
+        const answers = value
           .split(" / ")
-          .map((ans) => ans.trim());
+          .map((ans) => ans.trim())
+          .filter((ans) => ans !== "");
+
+        updated[currentPhase].answers = answers;
+        updated[currentPhase].type = answers.length === 1 ? "QCS" : "QCM";
       } else {
-        // @ts-expect-error: Safe assignment
+        // @ts-expect-error
         updated[currentPhase][key] = value;
       }
     }
@@ -59,7 +60,14 @@ export default function MultiQuizForm({courseId}:{courseId?:string}) {
   };
 
   const handleNext = () => {
-    if (currentPhase < 2) {
+    if (currentPhase < quizzes.length - 1) {
+      const updated = [...quizzes];
+      if (!updated[currentPhase + 1]) {
+        updated[currentPhase + 1] = { ...emptyQuiz };
+      }
+      // Ensure the next quiz is empty
+      updated[currentPhase + 1].options = ["", "", "", ""];
+      setQuizzes(updated);
       setCurrentPhase((prev) => prev + 1);
       formRef.current?.scrollIntoView({ behavior: "smooth" });
     }
@@ -72,26 +80,30 @@ export default function MultiQuizForm({courseId}:{courseId?:string}) {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
-      const res = await fetch("http://localhost:5007/assignment", {
+      const processedQuizzes = quizzes.map((quiz) => ({
+        ...quiz,
+        type: quiz.answers.length === 1 ? "QCS" : "QCM",
+      }));
+
+      const res = await fetch("http://localhost:5007/quiz", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          courseId: courseId,
-          questions: quizzes,
+          courseId,
+          questions: processedQuizzes,
         }),
       });
 
-      if (!res.ok) {
-        throw new Error("Failed to create course");
-      }
+      if (!res.ok) throw new Error("Failed to create quiz");
 
-      console.log("Course created successfully!");
+      console.log("Quiz submitted successfully");
     } catch (error) {
-      console.error("Error sending course creation:", error);
+      console.error("Submission error:", error);
     }
   };
 
@@ -154,20 +166,6 @@ export default function MultiQuizForm({courseId}:{courseId?:string}) {
         />
       </div>
 
-      <div>
-        <Label htmlFor="type">Type</Label>
-        <select
-          id="type"
-          name="type"
-          value={currentQuiz.type}
-          onChange={handleChange}
-          className="w-full border rounded p-2"
-        >
-          <option value="QCS">QCS</option>
-          <option value="QCM">QCM</option>
-        </select>
-      </div>
-
       <div className="flex justify-between mt-4">
         {currentPhase > 0 && (
           <button
@@ -179,7 +177,7 @@ export default function MultiQuizForm({courseId}:{courseId?:string}) {
           </button>
         )}
 
-        {currentPhase < 2 ? (
+        {currentPhase < quizzes.length - 1 ? (
           <button
             type="button"
             onClick={handleNext}
@@ -190,7 +188,7 @@ export default function MultiQuizForm({courseId}:{courseId?:string}) {
         ) : (
           <button
             type="submit"
-            className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 ml-auto"
+            className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 ml-auto"
           >
             Submit All
           </button>

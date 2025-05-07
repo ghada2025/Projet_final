@@ -65,6 +65,16 @@ export default function Courses() {
     return "grid-cols-3";
   };
 
+  const assignRandomColors = (classes: any[]) => {
+    let hash = 0;
+    let newClasses = []
+    for (let i = 0; i < classes.length; i++) {
+        hash = classes[i].title.charCodeAt(i) + ((hash << 5) - hash);
+        newClasses.push({...classes[i], color: `hsl(${hash % 360}, 70%, 60%)`})
+    }
+    return newClasses
+  };
+
   useEffect(() => {
     async function fetchPosts() {
       try {
@@ -162,12 +172,6 @@ export default function Courses() {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const colorClasses = {
-    red: "bg-red-300 border-red-600 text-red-600",
-    green: "bg-green-300 border-green-600 text-green-600",
-    blue: "bg-blue-300 border-blue-600 text-blue-600",
-    orange: "bg-orange-300 border-orange-600 text-orange-600",
-  };
 
   return (
     <>
@@ -183,9 +187,8 @@ export default function Courses() {
                 >
                   <p
                     className={clsx(
-                      "border-2 rounded-full p-3 text-[12px]",
-                      colorClasses[courseItem.color as keyof typeof colorClasses]
-                    )}
+                      "border-2 rounded-full p-3 text-[12px]"
+                    )} style={{ backgroundColor: courseItem.color }}
                   >
                     {courseItem.subject?.[0] || ""}
                   </p>

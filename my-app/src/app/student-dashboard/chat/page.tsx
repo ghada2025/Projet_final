@@ -135,7 +135,7 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex items-center justify-center relative">
+    <div className="flex items-center justify-center">
       <div className="max-w-[1400px] px-[50px] gap-10 w-full">
         <Header chat />
         <div className="flex flex-col items-center justify-center">
@@ -147,7 +147,7 @@ export default function Chat() {
               >
                 <ResizablePanel
                   defaultSize={75}
-                  className="rounded-xl border-r-5 border-b-5 border-3 border-black bg-white"
+                  className="rounded-xl border-r-5 border-b-5 border-3 border-black bg-white relative"
                 >
                   <div className="h-full flex flex-col">
                     <ScrollArea className="flex-1 max-h-[527px] overflow-y-auto p-5">
@@ -167,7 +167,7 @@ export default function Chat() {
                         <div ref={messagesEndRef} />
                       </div>
                     </ScrollArea>
-                    <div className="flex gap-2 p-5 border-t-5 border-black items-center [@media(max-width:420px)]:flex-col [@media(max-width:420px)]:items-center">
+                    <div className="flex gap-2 p-5 border-t-5 border-black items-center [@media(max-width:498px)]:flex-col [@media(max-width:498px)]:items-center">
                       <input
                         type="text"
                         placeholder="Write a message..."
@@ -192,7 +192,7 @@ export default function Chat() {
                           <Smile />
                         </Button>
                         {showEmojiPicker && (
-                          <div className="absolute top-110 left-95 z-10">
+                          <div className="absolute top-5 right-5 z-10 [@media(max-width:498px)]:w-[90%] overflow-x-auto scroll-container">
                             <Picker
                               data={data}
                               theme="light"

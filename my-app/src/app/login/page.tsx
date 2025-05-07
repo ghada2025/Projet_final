@@ -48,29 +48,29 @@ export default function Login() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
+  
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
-
-    // Email validation
+  
     if (name === "email") {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       setIsValid(value ? emailRegex.test(value) : true);
     }
-
+  
     // Password validation (optionnel à activer si besoin)
-    // if (name === "password") {
-    //   const passwordIsValid =
-    //     value.length >= 8 &&
-    //     /[A-Z]/.test(value) &&
-    //     /[a-z]/.test(value) &&
-    //     /\d/.test(value) &&
-    //     /[!@#$%^&*(),.?":{}|<>]/.test(value);
-    //   setIsCorrect(value ? passwordIsValid : true);
-    // }
+    if (name === "password") {
+      const passwordIsValid =
+        value.length >= 8 &&
+        /[A-Z]/.test(value) &&
+        /[a-z]/.test(value) &&
+        /\d/.test(value) &&
+        /[!@#$%^&*(),.?":{}|<>]/.test(value);
+      setIsCorrect(value ? passwordIsValid : true);
+    }
   };
+  
 
   const handleLoginSubmit = async () => {
     const currentStatus = elements[index].status;
@@ -156,9 +156,6 @@ export default function Login() {
                 onChange={handleChange}
                 name="password"
               />
-              <p className="mt-[2.5vh] text-blue-500 cursor-pointer p-font">
-                <Link href={"/reset-password"}>I forget my password !</Link>
-              </p>
               <Link
                 href={elements[index].status === "teacher" ? "/teacher-dashboard/Home" : "/student-dashboard"}
               >
