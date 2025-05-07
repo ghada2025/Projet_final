@@ -9,7 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Image, Send, Smile } from "lucide-react";
 import Header from "@/components/header";
 import Picker from "@emoji-mart/react";
-import data from "@emoji-mart/data";
+
 
 type Student = {
   _id: string;
@@ -194,7 +194,7 @@ export default function Chat() {
                         {showEmojiPicker && (
                           <div className="absolute top-5 right-5 z-10 [@media(max-width:498px)]:w-[90%] overflow-x-auto scroll-container">
                             <Picker
-                              data={data}
+                              
                               theme="light"
                               onEmojiSelect={(emoji: any) => {
                                 setNewMessage((prev) => prev + emoji.native);

@@ -11,9 +11,8 @@ import {
 } from "@/components/ui/resizable";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {  MessageCircle, Send, Smile } from "lucide-react";
-import Picker from "@emoji-mart/react";
-import data from "@emoji-mart/data";
 import Component from "@/components/fileUpload";
+import Picker  from '@emoji-mart/react';
 
 
 
@@ -213,16 +212,18 @@ export default function Chat() {
                             <Smile />
                             </Button>
                             {showEmojiPicker && (
-                            <div className="absolute top-110 right-50 z-10">
-                                <Picker
-                                data={data}
-                                theme="light"
-                                onEmojiSelect={(emoji: any) => {
-                                    setNewMessage((prev) => prev + emoji.native);
-                                }}
-                                />
-                            </div>
-                            )}
+                                <div className="absolute top-110 right-50 z-10">
+                                    <Picker
+                                    theme="light"
+                                    onEmojiSelect={(emoji: any) => {
+                                        setNewMessage((prev) => prev + emoji.native);
+                                    }}
+                                    locale="en"
+                                    />
+                                </div>
+                                )}
+
+
                             <Button
                             size="icon"
                             className="bg-blue-600 hover:bg-blue-700 border cursor-pointer"
