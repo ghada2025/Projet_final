@@ -63,7 +63,7 @@ export function EventDialog({
   const [endTime, setEndTime] = useState(`${DefaultEndHour}:00`);
   const [allDay, setAllDay] = useState(false);
   const [location, setLocation] = useState("");
-  const [color, setColor] = useState<EventColor>("sky");
+  const [color, setColor] = useState<EventColor>("blue");
   const [error, setError] = useState<string | null>(null);
   const [startDateOpen, setStartDateOpen] = useState(false);
   const [endDateOpen, setEndDateOpen] = useState(false);
@@ -87,7 +87,7 @@ export function EventDialog({
       setEndTime(formatTimeForInput(end));
       setAllDay(event.allDay || false);
       setLocation(event.location || "");
-      setColor((event.color as EventColor) || "sky");
+      setColor((event.color as EventColor) || "blue");
       setError(null); // Reset error when opening dialog
     } else {
       resetForm();
@@ -103,7 +103,7 @@ export function EventDialog({
     setEndTime(`${DefaultEndHour}:00`);
     setAllDay(false);
     setLocation("");
-    setColor("sky");
+    setColor("blue");
     setError(null);
   };
 
@@ -194,31 +194,31 @@ export function EventDialog({
     borderClass: string;
   }> = [
     {
-      value: "sky",
-      label: "Sky",
+      value: "blue",
+      label: "blue",
       bgClass: "bg-[var(--main-blue)] data-[state=checked]:bg-[var(--main-blue)]",
       borderClass: "border-[var(--main-blue)] data-[state=checked]:border-[var(--main-blue)]",
     },
     {
-      value: "amber",
+      value: "orange",
       label: "Amber",
       bgClass: "bg-[var(--main-orange)] data-[state=checked]:bg-[var(--main-orange)]",
       borderClass: "border-[var(--main-orange)] data-[state=checked]:border-[var(--main-orange)]",
     },
     {
-      value: "violet",
+      value: "purple",
       label: "Violet",
       bgClass: "bg-[var(--main-purple)] data-[state=checked]:bg-[var(--main-purple)]",
       borderClass: "border-[var(--main-purple)] data-[state=checked]:border-[var(--main-purple)]",
     },
     {
-      value: "rose",
+      value: "red",
       label: "Rose",
       bgClass: "bg-[var(--main-red)] data-[state=checked]:bg-[var(--main-red)]",
       borderClass: "border-[var(--main-red)] data-[state=checked]:border-[var(--main-red)]",
     },
     {
-      value: "emerald",
+      value: "green",
       label: "Emerald",
       bgClass: "bg-[var(--main-green)] data-[state=checked]:bg-[var(--main-green)]",
       borderClass: "border-[var(--main-green)] data-[state=checked]:border-[var(--main-green)]",

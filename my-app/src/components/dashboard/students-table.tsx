@@ -108,7 +108,6 @@ const statusFilterFn: FilterFn<Item> = (
   return filterValue.includes(status);
 };
 
-
 type GetColumnsProps = {
   data: Item[];
   setData: React.Dispatch<React.SetStateAction<Item[]>>;
@@ -116,21 +115,30 @@ type GetColumnsProps = {
   isAssign?: boolean;
 };
 
-
-export const getColumns = ({ data, setData, isOpen, isAssign }: GetColumnsProps): ColumnDef<Item>[] => [
+export const getColumns = ({
+  data,
+  setData,
+  isOpen,
+  isAssign,
+}: GetColumnsProps): ColumnDef<Item>[] => [
   // Select Column (only if !isAssign)
   ...(!isAssign
     ? [
         {
           id: "select",
-          header: ({ table }:{table:any}) => (
+          header: ({ table }: { table: any }) => (
             <Checkbox
-              checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
-              onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+              checked={
+                table.getIsAllPageRowsSelected() ||
+                (table.getIsSomePageRowsSelected() && "indeterminate")
+              }
+              onCheckedChange={(value) =>
+                table.toggleAllPageRowsSelected(!!value)
+              }
               aria-label="Select all"
             />
           ),
-          cell: ({ row }:{ row:any }) => (
+          cell: ({ row }: { row: any }) => (
             <Checkbox
               checked={row.getIsSelected()}
               onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -150,7 +158,9 @@ export const getColumns = ({ data, setData, isOpen, isAssign }: GetColumnsProps)
     accessorKey: "name",
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
-        <div className="font-medium block w-full truncate">{row.getValue("name")}</div>
+        <div className="font-medium block w-full truncate">
+          {row.getValue("name")}
+        </div>
       </div>
     ),
     size: 180,
@@ -162,7 +172,9 @@ export const getColumns = ({ data, setData, isOpen, isAssign }: GetColumnsProps)
     header: "ID",
     accessorKey: "id",
     cell: ({ row }) => (
-      <span className="text-muted-foreground block w-full truncate">{row.getValue("id")}</span>
+      <span className="text-muted-foreground block w-full truncate">
+        {row.getValue("id")}
+      </span>
     ),
     size: 110,
   },
@@ -203,10 +215,14 @@ export const getColumns = ({ data, setData, isOpen, isAssign }: GetColumnsProps)
     accessorKey: "verified",
     cell: ({ row }) => (
       <div>
-        <span className="sr-only">{row.original.verified ? "Verified" : "Not Verified"}</span>
+        <span className="sr-only">
+          {row.original.verified ? "Verified" : "Not Verified"}
+        </span>
         <RiVerifiedBadgeFill
           size={20}
-          className={cn(row.original.verified ? "fill-blue-600" : "fill-muted-foreground/50")}
+          className={cn(
+            row.original.verified ? "fill-blue-600" : "fill-muted-foreground/50"
+          )}
           aria-hidden="true"
         />
       </div>
@@ -214,54 +230,56 @@ export const getColumns = ({ data, setData, isOpen, isAssign }: GetColumnsProps)
     size: 90,
   },
 
- // Answer or Progress Column
-...(!isOpen
-  ? isAssign
-    ? [
-        {
-          header: "Answer",
-          accessorKey: "answer",
-          cell: ({ row }: any) => {
-            return (
-              <button
-                onClick={() => {
-                  window.open(row.getValue("answer"), "_blank", "noopener,noreferrer");
-                }}
-                className="px-4 py-1 bg-blue-500 text-white rounded-sm hover:bg-blue-600"
-              >
-                Open
-              </button>
-            );
+  // Answer or Progress Column
+  ...(!isOpen
+    ? isAssign
+      ? [
+          {
+            header: "Answer",
+            accessorKey: "answer",
+            cell: ({ row }: any) => {
+              return (
+                <button
+                  onClick={() => {
+                    window.open(
+                      row.getValue("answer"),
+                      "_blank",
+                      "noopener,noreferrer"
+                    );
+                  }}
+                  className="px-4 py-1 bg-blue-500 text-white rounded-sm hover:bg-blue-600"
+                >
+                  Open
+                </button>
+              );
+            },
           },
-        }
-      ]
-    : [
-        {
-          header: "Progress",
-          accessorKey: "value",
-          cell: ({ row }: any) => {
-            const value = row.getValue("value") as number;
-            return (
-              <TooltipProvider delayDuration={0}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex h-full w-full items-center">
-                      <Progress className="h-1" value={value} />
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent align="start" sideOffset={-8}>
-                    <p>{value}%</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            );
+        ]
+      : [
+          {
+            header: "Progress",
+            accessorKey: "value",
+            cell: ({ row }: any) => {
+              const value = row.getValue("value") as number;
+              return (
+                <TooltipProvider delayDuration={0}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex h-full w-full items-center">
+                        <Progress className="h-1" value={value} />
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent align="start" sideOffset={-8}>
+                      <p>{value}%</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              );
+            },
+            size: 80,
           },
-          size: 80,
-        }
-      ]
-  : []
-),
-
+        ]
+    : []),
 
   // Actions Column
   {
@@ -300,8 +318,15 @@ const copyToClipboard = (text: string) => {
   }
 };
 
-
-export default function StudentsTable({ isOpen, isAssign, assignments }: { isOpen?: boolean, isAssign?: boolean, assignments?:any }) {
+export default function StudentsTable({
+  isOpen,
+  isAssign,
+  assignments,
+}: {
+  isOpen?: boolean;
+  isAssign?: boolean;
+  assignments?: any;
+}) {
   const id = useId();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -321,53 +346,57 @@ export default function StudentsTable({ isOpen, isAssign, assignments }: { isOpe
 
   const [data, setData] = useState<Item[]>([]);
   if (isAssign) {
-    useEffect(()=>{
-      setData(assignments)
+    useEffect(() => {
+      setData(assignments);
       setIsLoading(false);
-    },[assignments])
+    }, [assignments]);
   }
   const [isLoading, setIsLoading] = useState(true);
 
-  const columns = useMemo(() => getColumns({ data, setData, isOpen, isAssign }), [data]);
+  const columns = useMemo(
+    () => getColumns({ data, setData, isOpen, isAssign }),
+    [data]
+  );
 
+  if (!isAssign) {
+    useEffect(() => {
+      async function fetchPosts() {
+        try {
+          const res = await fetch(
+            `http://localhost:5007/student/${isOpen ? "" : "all"}`,
+            {
+              method: "GET",
+              credentials: "include",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
 
+          const dataAdd = await res.json();
 
-if (!isAssign) {
-  useEffect(() => {
-    async function fetchPosts() {
-      try {
-        const res = await fetch(`http://localhost:5007/student/${isOpen?"":"all"}`, {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-  
-        const dataAdd = await res.json();
-        
-        const formattedData = dataAdd.students.map((student: any, index: number) => ({
-          id: student.id, // You can adjust how you want to generate IDs
-          name: `${student.firstName} ${student.lastName}`,
-          class: student.classe,
-          email: student.email,
-          verified: true, // or true depending on your logic
-          value: parseInt(student.progress) || 0,
-          joinDate: new Date(student.createdAt).toISOString().split('T')[0], // format date to "YYYY-MM-DD"
-        }));
-  
-        setData(formattedData);
-  
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setIsLoading(false);
+          const formattedData = dataAdd.students.map(
+            (student: any, index: number) => ({
+              id: student.id, // You can adjust how you want to generate IDs
+              name: `${student.firstName} ${student.lastName}`,
+              class: student.classe,
+              email: student.email,
+              verified: true, // or true depending on your logic
+              value: parseInt(student.progress) || 0,
+              joinDate: new Date(student.createdAt).toISOString().split("T")[0], // format date to "YYYY-MM-DD"
+            })
+          );
+
+          setData(formattedData);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        } finally {
+          setIsLoading(false);
+        }
       }
-    }
-    fetchPosts();
-  }, []);
-}
-  
+      fetchPosts();
+    }, []);
+  }
 
   // {
   //   id: "XCU-85036",
@@ -379,7 +408,7 @@ if (!isAssign) {
   //   joinDate: "2023-09-10",
   // },
 
-  const [classSel, setClassSel] = useState("")
+  const [classSel, setClassSel] = useState("");
 
   const handleDeleteRows = () => {
     if (!isOpen) {
@@ -411,22 +440,20 @@ if (!isAssign) {
             name: classSel,
           }),
         });
-  
+
         if (!res.ok) {
           throw new Error("Failed to create class");
         }
-  
+
         console.log("Class created successfully!");
         // Optionally, you can reset open or show a success message here
-  
       } catch (error) {
         console.error("Error sending class creation:", error);
       }
     } else {
       console.warn("No students selected");
     }
-  }  
-  
+  }
 
   const table = useReactTable({
     data,
@@ -489,12 +516,20 @@ if (!isAssign) {
   };
 
   return (
-    <div className={`${isOpen?"flex":isAssign?"flex justify-center items-center":""}`}>
-      {isOpen && (<div className="w-3/10 p-6">
-      <Label className="pb-4 text-md">Class name:</Label>
-      <Input className="mt-1 w-9/10 border-2" onChange={(e: ChangeEvent<HTMLInputElement>) => setClassSel(e.target.value)}></Input>
-      </div>)}
-      <div className={`space-y-4 ${isOpen?"w-7/10 h-[66vh]":"full"} ${isAssign?"w-9/10 h-[66vh]":"full"} overflow-y-auto scroll-container`}>
+    <div
+      className={`${
+        isOpen
+          ? "flex justify-center items-center"
+          : isAssign
+          ? "flex justify-center items-center"
+          : ""
+      }`}
+    >
+      <div
+        className={`space-y-4 ${isOpen ? "w-9/10 h-[66vh]" : "full"} ${
+          isAssign ? "w-9/10 h-[66vh]" : "full"
+        } overflow-y-auto scroll-container`}
+      >
         {/* Actions */}
         <div className="flex flex-wrap items-center justify-between gap-3">
           {/* Left side */}
@@ -796,17 +831,30 @@ if (!isAssign) {
             </Pagination>
           </div>
         )}
-        {isOpen &&(<div className="mt-6 flex justify-end gap-2">
-                    <button
-                      className="px-4 py-2 border rounded-lg text-gray-700 hover:bg-gray-100"
-                    >
-                      Cancel
-                    </button>
-                    <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600" 
-                      onClick={handleClick}>
-                      Create
-                    </button>
-                  </div>)}
+        {isOpen && (
+          <div className="flex justify-between items-center mt-6 [@media(max-width:550px)]:flex-col">
+            <div className="p-6 [@media(max-width:550px)]:flex [@media(max-width:550px)]:flex-col">
+              <Label className="pb-4 [@media(max-width:550px)]:pb-1 text-md [@media(max-width:550px)]:text-center w-ful">Class name:</Label>
+              <Input
+                className="mt-1 border-2 w-full"
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setClassSel(e.target.value)
+                }
+              ></Input>
+            </div>
+            <div className="flex justify-end gap-2 mt-6 [@media(max-width:550px)]:mt-0">
+              <button className="px-4 py-2 border rounded-lg text-gray-700 hover:bg-gray-100">
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                onClick={handleClick}
+              >
+                Create
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -119,7 +119,7 @@ function TimelineItem({ step, className, ...props }: TimelineItemProps) {
       role="listitem"
       data-slot="timeline-item"
       className={cn(
-        "group/timeline-item has-[+[data-completed]]:[&_[data-slot=timeline-separator]]:bg-primary relative flex flex-1 flex-col gap-0.5",
+        "group/timeline-item has-[+[data-completed]]:[&_[data-slot=timeline-separator]]:bg-[#FFDC83] relative flex flex-1 flex-col gap-0.5",
         "group-data-[orientation=horizontal]/timeline:mt-8 group-data-[orientation=horizontal]/timeline:not-last:pe-8",
         "group-data-[orientation=vertical]/timeline:ms-8 group-data-[orientation=vertical]/timeline:not-last:pb-12",
         className
@@ -144,7 +144,7 @@ function TimelineSeparator({ className, isCompleted = false, ...props }: Timelin
         "group-data-[orientation=vertical]/timeline:-left-6 group-data-[orientation=vertical]/timeline:h-[calc(100%-1rem-0.25rem)] group-data-[orientation=vertical]/timeline:w-0.5 group-data-[orientation=vertical]/timeline:-translate-x-1/2 group-data-[orientation=vertical]/timeline:translate-y-4.5",
         className
       )}
-      style={{ backgroundColor: isCompleted ? "var(--main-orange)" : "rgba(0,0,0,0.1)" }}
+      style={{ backgroundColor: isCompleted ? "var(--main-orange)" : "#FFDC83" }}
       aria-hidden="true"
       {...props}
     />

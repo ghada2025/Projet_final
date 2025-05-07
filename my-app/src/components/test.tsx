@@ -16,7 +16,6 @@ export default function FlipCard({
   dataIn: FormData;
 }) {
   const [flipped, setFlipped] = useState(false);
-  const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
   const router = useRouter();
 
   async function handleSubmit(level: string) {

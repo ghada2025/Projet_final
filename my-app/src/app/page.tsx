@@ -1,6 +1,7 @@
 "use client";
 import Card from "@/components/card";
 import Footer from "@/components/footer";
+import FormMail from "@/components/formMail";
 import InputContact from "@/components/input";
 import Navbar from "@/components/navbar";
 import TextArea from "@/components/textarea";
@@ -155,11 +156,7 @@ return(
         <h3 className="header-h3-font header-width text-base ">
           Support is just a click away. Contact us for prompt assistance with your inquiries.
         </h3>
-        <InputContact />
-        <TextArea />
-        <button className="custom-button w-full header-p-font mt-4 h-12 sm:h-14 md:h-16">
-          Send Your Message
-        </button>
+        <FormMail></FormMail>
       </div>
 
       {/* Image positioned below */}

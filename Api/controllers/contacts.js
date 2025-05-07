@@ -1,42 +1,37 @@
-
 import { Message } from "../models/contact.js";
+import "dotenv/config";
 import nodemailer from "nodemailer";
 
 export async function createContact(req, res) {
     try {
         const { email, message } = req.body;
 
-        // ✅ Vérification de l'email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             return res.status(400).json({ message: "❌ Email invalide." });
         }
 
-        // ✅ Sauvegarde du message dans la base
         const newMessage = new Message({ email, message });
         await newMessage.save();
 
-        // ✅ Création du transporteur
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: "khenieneghada@gmail.com",
-                pass: "ygob acxr xvmq agpx",
+                user: process.env.USER,
+                pass: process.env.PASS,
             },
         });
 
-        // ✅ Envoi du message vers l'école
         await transporter.sendMail({
-            from: email, // email de l'étudiant
-            to: "ghada.webdeveloper@gmail.com", // email de l'école
+            from: process.env.USER,
+            to: "mohamedriaddoukha@gmail.com",
             subject: "📩 Nouveau message depuis la plateforme",
             text: message,
         });
 
-        // ✅ Envoi de confirmation vers l'étudiant
         await transporter.sendMail({
-            from: '"Support École 📚" <schoolName@gmail.com>', // l'école répond
-            to: email, // email de l'étudiant
+            from: `"Support École - Liberty School 📚" <${process.env.USER}>`,
+            to: email,
             subject: "✅ Nous avons bien reçu votre message",
             text: `Bonjour,\n\nNous avons bien reçu votre message et nous vous répondrons dans les plus brefs délais.\n\nVoici une copie de votre message :\n"${message}"\n\nMerci de nous avoir contactés !`,
         });
@@ -48,4 +43,3 @@ export async function createContact(req, res) {
         res.status(500).json({ message: "Erreur serveur", error: error.message });
     }
 }
-

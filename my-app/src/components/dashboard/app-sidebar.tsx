@@ -21,12 +21,12 @@ import {
   RiChat4Line,
   RiGraduationCapLine,
   RiBriefcaseLine,
+  RiQuillPenLine,
 } from "@remixicon/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation"
-
+import { useRouter } from "next/navigation";
 
 // This is sample data.
 const data = {
@@ -57,6 +57,12 @@ const data = {
           title: "Assignments",
           url: "#",
           icon: RiBriefcaseLine,
+          isActive: false,
+        },
+        {
+          title: "Quizzes",
+          url: "#",
+          icon: RiQuillPenLine,
           isActive: false,
         },
         {
@@ -93,7 +99,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <div className="py-4 flex items-center gap-3">
           <Image src={"/logo.png"} alt="logo" width={30} height={30}></Image>
-          <h2 className="font-bold text-xl">School Name</h2>
+          <h2 className="font-bold text-xl">Liberty School</h2>
         </div>
         <hr className="border-t border-border mx-2 -mt-px" />
       </SidebarHeader>
@@ -112,7 +118,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       <SidebarMenuButton
                         asChild
                         className="group/menu-button font-medium gap-3 h-9 rounded-md bg-gradient-to-r hover:bg-blue-300 hover:from-blue-300 hover:to-blue-200 hover:text-white data-[active=true]:from-blue-500 data-[active=true]:to-blue-300 data-[active=true]:text-white [&>svg]:size-auto text-black"
-                        isActive={active===item.title}
+                        isActive={active === item.title}
                       >
                         <div>
                           {item.icon && (
@@ -134,24 +140,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ))}
       </SidebarContent>
       <SidebarFooter>
-        <hr className="border-t border-border mx-2 -mt-px" />
+        <hr className="border-t border-border mx-2 -mt-px flex justify-center" />
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton 
+          <SidebarMenuItem className="flex justify-center">
+            <SidebarMenuButton
               onClick={() => {
-                fetch("http://localhost:5007/teacher/logout", {
+                fetch("http://localhost:5007/student/logout", {
                   method: "GET",
                   credentials: "include",
-                })
-                router.push("/")
-              }} 
-              className="font-medium gap-3 h-9 rounded-md bg-gradient-to-r hover:bg-transparent hover:from-sidebar-accent hover:to-sidebar-accent/40 data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto">
-              <RiLogoutBoxLine
-                className="text-muted-foreground/60 group-data-[active=true]/menu-button:text-primary"
-                size={22}
-                aria-hidden="true"
-              />
-              <span>Sign Out</span>
+                });
+                router.push("/");
+              }}
+              className="bg-white text-center w-48 rounded-2xl h-14 relative text-black text-lg font-semibold group hidden [@media(min-width:525px)]:block"
+            >
+              <div className="bg-blue-400 border-2 cursor-pointer border-black height-input rounded-xl h-12 w-1/4 flex items-center justify-center absolute left-1 top-[4px] group-hover:w-[184px] z-10 duration-500">
+                <RiLogoutBoxLine className="text-bold"></RiLogoutBoxLine>
+              </div>
+              <p className="translate-x-2 font-semibold">Sign out</p>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

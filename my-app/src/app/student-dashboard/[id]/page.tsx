@@ -1,11 +1,21 @@
 "use client";
 import CourseDetails from "@/components/course-details";
 import Header from "@/components/header";
+import { useContainerWidth } from "@/hooks/useContainerWidth";
+import clsx from "clsx";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Course() {
+  const [gridRef, containerWidth] = useContainerWidth();
+  const originalWidth = 1000; // assumed original full width
+
+  const containerWidthSet = () => {
+    if (containerWidth <= originalWidth) return `w-${containerWidth} mx-auto`;
+    return `w-${containerWidth}`;
+  };
+
   const params = useParams();
   const id = params.id;
   console.log("id", id);
@@ -44,14 +54,15 @@ export default function Course() {
           return newObj;
         };
 
-        // Clean data
         const cleanCoursedet = [
           ...(coursedetData.completed?.map(replaceId) || []),
           ...(coursedetData.incompleted?.map(replaceId) || []),
         ];
 
         setLast(coursedetData.completed.length);
-        const cleanCourse = courseData?.course ? replaceId(courseData.course) : null;
+        const cleanCourse = courseData?.course
+          ? replaceId(courseData.course)
+          : null;
 
         setCoursedet(cleanCoursedet);
         setCourse(cleanCourse);
@@ -64,26 +75,29 @@ export default function Course() {
     fetchData();
   }, [id]);
 
-  // Screen size check
   useEffect(() => {
     const checkScreenWidth = () => {
-      if (window.innerWidth < 700) {
-        setIsSmallScreen(true); // True if width is less than 700px
+      if (window.innerWidth < 1050) {
+        setIsSmallScreen(true);
       } else {
-        setIsSmallScreen(false); // False if width is 700px or more
+        setIsSmallScreen(false);
       }
     };
 
-    checkScreenWidth(); // Check on initial load
-    window.addEventListener("resize", checkScreenWidth); // Event listener on resize
+    checkScreenWidth();
+    window.addEventListener("resize", checkScreenWidth);
 
     return () => {
-      window.removeEventListener("resize", checkScreenWidth); // Cleanup on unmount
+      window.removeEventListener("resize", checkScreenWidth);
     };
   }, []);
 
   if (!course || coursedet.length === 0) {
-    return <div>Loading...</div>;
+    return (
+      <div className="w-full h-full flex justify-center items-center header-font">
+        Loading...
+      </div>
+    );
   }
 
   return (
@@ -91,16 +105,16 @@ export default function Course() {
       <div className="max-w-[1400px] px-[50px] gap-10 w-full">
         <Header />
 
-        <div className="flex h-auto lg:h-[80vh] nav-gap">
-          {/* Course Details for larger screens */}
-          {!isSmallScreen && <CourseDetails courseList={coursedet} last={last} isSmallScreen/>}
+        <div className="flex h-auto lg:h-[80vh] nav-gap w-full">
+          {!isSmallScreen && (
+            <CourseDetails courseList={coursedet} last={last} isSmallScreen={isSmallScreen} />
+          )}
 
-          {/* Modal for Course Details on small screens */}
           {showDetails && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#3b3b3b]">
               <div className="bg-white w-[90vw] max-w-[600px] rounded-lg shadow-lg p-6 relative animate-fadeIn flex justify-center">
                 <button
-                  onClick={() => setShowDetails(false)} // Close modal
+                  onClick={() => setShowDetails(false)}
                   className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-xl"
                 >
                   &times;
@@ -110,52 +124,56 @@ export default function Course() {
             </div>
           )}
 
-          <section className={`${!isSmallScreen? "w-full":"w-2/3"}`}>
+          <section className={clsx(isSmallScreen ? "w-full" : "w-7/10")}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="h2-font">Let's learn !</h3>
 
-              {/* Show/Hide Course Details button for small screens */}
               {isSmallScreen && (
                 <button
                   className="font-bold header-p-font text-[var(--main-orange)] py-2 lg:hidden"
-                  onClick={() => setShowDetails((prev) => !prev)} // Toggle visibility
+                  onClick={() => setShowDetails((prev) => !prev)}
                 >
                   {showDetails ? "Hide Details" : "Show Details"}
                 </button>
               )}
             </div>
 
-            <div className="rounded-lg border-3 border-b-7 border-r-7 border-black p-6 overflow-y-auto scroll-container h-[68vh] header-p-margin flex flex-col">
+            <div
+              ref={gridRef}
+              className="rounded-lg border-3 border-b-7 border-r-7 border-black p-6 overflow-y-auto scroll-container h-[68vh] header-p-margin flex flex-col"
+            >
               <div>
                 <div>
                   <h2 className="h2-font">{course?.title}</h2>
                 </div>
-                <div className="flex items-start justify-between nav-gap votre-classe">
-                  <p className="p-font header-p-padding w-5/10">{course?.description}</p>
-                  <div className="w-5/10 flex items-start justify-center">
+                <div className="flex items-start nav-gap votre-classe w-full">
+                  <p className="p-font header-p-padding w-5/10 [@media(max-width:1000px)]:w-full">
+                    {course?.description}
+                  </p>
+                  <div className={clsx(containerWidthSet())}>
                     <iframe
-                      width="560"
+                      width="100%"
                       height="315"
-                      src={course?.videoUrl}
+                      src="https://www.youtube.com/embed/Piw-9dOC8YQ?si=5DWzuqqLknE4qOoY"
                       title="YouTube video player"
                       frameBorder="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                       referrerPolicy="strict-origin-when-cross-origin"
                       allowFullScreen
-                      className="header-p-padding"
+                      className={clsx("rounded-lg mb-5 h-[30vh]", containerWidthSet())}
                     ></iframe>
                   </div>
                 </div>
               </div>
-              <div className="flex items-center justify-between mt-auto">
+              <div className="flex items-center justify-between mt-auto [@media(max-width:320px)]:flex-col [@media(max-width:320px)]:gap-2">
                 <Link href="/student-dashboard/">
                   <button className="font-bold header-p-font text-[var(--main-orange)] py-2">
                     Previous
                   </button>
                 </Link>
                 <Link href={`/student-dashboard/${id}/quiz`}>
-                  <button className="custom-button header-p-font">
-                    Take The Quiz !
+                  <button className="custom-button header-p-font ml-3">
+                    Take The Quiz
                   </button>
                 </Link>
               </div>
@@ -166,5 +184,3 @@ export default function Course() {
     </div>
   );
 }
-
-

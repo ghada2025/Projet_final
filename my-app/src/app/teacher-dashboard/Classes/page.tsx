@@ -87,8 +87,8 @@ useEffect(() => {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row nav-gap">
-        <div className="w-full md:w-[30%]">
+      <div className="flex flex-col gap-5 md:grid md:grid-rows-1 md:grid-cols-[30%_68.2%] mb-5">
+        <div className="flex flex-col w-full">
           <div>
             <AddClass
               onClick={() => {
@@ -97,7 +97,7 @@ useEffect(() => {
             />
             {isOpen && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#3b3b3b]">
-                <div className="bg-white w-[90vw] max-w-[600px] rounded-lg shadow-lg p-6 relative animate-fadeIn">
+                <div className="bg-white w-[70vw]  rounded-lg shadow-lg p-6 relative animate-fadeIn">
                   <button
                     onClick={() => setIsOpen(false)}
                     className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-xl"
@@ -122,9 +122,9 @@ useEffect(() => {
             )}
           </div>
   
-          <div className="h-[62vh] border my-8 rounded-lg">
+          <div className="border flex-1 mt-8 rounded-lg">
             <h2 className="p-4 text-center">Classes List</h2>
-            <div className="h-[54vh] overflow-y-auto scroll-container rounded-lg">
+            <div className="max-h-[70vh] h-auto overflow-y-auto scroll-container rounded-lg">
               {classes.map((classItem: any, index: number) => (
                 <div
                   key={index}
@@ -157,7 +157,7 @@ useEffect(() => {
         <div
           ref={gridRef}
           className={clsx(
-            "w-full md:w-[70%] h-[89.2vh] border grid auto-rows-[minmax(26.2vh,auto)] gap-5 p-5 mb-8 rounded-lg overflow-y-auto scroll-container transition-all duration-300",
+            "w-full h-full border grid auto-rows-[minmax(26.2vh,auto)] gap-5 p-5 mb-8 rounded-lg overflow-y-auto scroll-container transition-all duration-300",
             getGridCols()
           )}
         >

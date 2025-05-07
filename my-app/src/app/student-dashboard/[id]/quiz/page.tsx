@@ -1,17 +1,19 @@
 "use client";
 import CourseDetails from "@/components/course-details";
 import Header from "@/components/header";
-import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Quiz() {
-  const [quizzes, setQuizzes] = useState<any>([]);
+  const [quizzes, setQuizzes] = useState<any[]>([]);
   const [quizzId, setQuizzId] = useState<string | null>(null);
   const { id } = useParams<{ id: string }>();
-  const router = useRouter();
   const [coursedet, setCoursedet] = useState<any[]>([]);
   const [course, setCourse] = useState<any>(null);
   const [last, setLast] = useState(0);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,12 +25,8 @@ export default function Quiz() {
           }),
         ]);
 
-        if (!courseRes.ok) {
-          throw new Error("courseRes fetch failed");
-        }
-        if (!coursedetRes.ok) {
-          throw new Error("coursedetRes fetch failed");
-        }
+        if (!courseRes.ok) throw new Error("courseRes fetch failed");
+        if (!coursedetRes.ok) throw new Error("coursedetRes fetch failed");
 
         const courseData = await courseRes.json();
         const coursedetData = await coursedetRes.json();
@@ -49,7 +47,7 @@ export default function Quiz() {
         setCoursedet(cleanCoursedet);
         setCourse(cleanCourse);
         setQuizzes(cleanCourse?.quiz?.questions || []);
-        setQuizzId(cleanCourse?.quiz?._id || "");
+        setQuizzId(cleanCourse?.quiz?._id || null);
       } catch (err) {
         console.error("Fetching error:", err);
       }
@@ -57,6 +55,15 @@ export default function Quiz() {
 
     fetchData();
   }, [id]);
+
+  useEffect(() => {
+    const checkScreenWidth = () => {
+      setIsSmallScreen(window.innerWidth < 1050);
+    };
+    checkScreenWidth();
+    window.addEventListener("resize", checkScreenWidth);
+    return () => window.removeEventListener("resize", checkScreenWidth);
+  }, []);
 
   const [index, setIndex] = useState(0);
   const [isDone, setIsDone] = useState(false);
@@ -136,14 +143,11 @@ export default function Quiz() {
     const finalScore = calculateScore();
     setScore(finalScore);
     setIsSubmitted(true);
-
-    if (!quizzId) return;
-
     await fetch(`http://localhost:5007/quiz/submit/${quizzId}`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ score: finalScore }),
+      body: JSON.stringify({ score: finalScore, status: "Done" }),
     });
   }
 
@@ -151,16 +155,44 @@ export default function Quiz() {
     <div className="flex items-center justify-center relative">
       <div className="max-w-[1400px] px-[50px] gap-10 w-full">
         <Header />
-        <div className="flex h-[80vh] nav-gap">
-          <CourseDetails courseList={coursedet} last={last} />
-          <section className="w-3/4">
-            <h3 className="h2-font">Let's learn !</h3>
+        <div className="flex h-[80vh] nav-gap w-full">
+          {!isSmallScreen && (
+            <CourseDetails courseList={coursedet} last={last} isSmallScreen={false} />
+          )}
+
+          {showDetails && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#3b3b3b]">
+              <div className="bg-white w-[90vw] max-w-[600px] rounded-lg shadow-lg p-6 relative animate-fadeIn flex justify-center">
+                <button
+                  onClick={() => setShowDetails(false)}
+                  className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-xl"
+                >
+                  &times;
+                </button>
+                <CourseDetails courseList={coursedet} last={last} />
+              </div>
+            </div>
+          )}
+
+          <section className="w-full lg:w-3/4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="h2-font">Let's learn !</h3>
+              {isSmallScreen && (
+                <button
+                  className="font-bold header-p-font text-[var(--main-orange)] py-2 lg:hidden"
+                  onClick={() => setShowDetails((prev) => !prev)}
+                >
+                  {showDetails ? "Hide Details" : "Show Details"}
+                </button>
+              )}
+            </div>
+
             <div className="rounded-lg border-3 border-b-7 border-r-7 border-black p-6 overflow-y-auto scroll-container h-[68vh] header-p-margin flex flex-col">
               {!isSubmitted ? (
                 <div>
                   <h2 className="h2-font">{quizzes[index]?.title}</h2>
                   <p className="p-font header-p-padding">{quizzes[index]?.question}</p>
-                  <div className="grid grid-cols-2 nav-gap">
+                  <div className="grid grid-cols-2 [@media(max-width:600px)]:grid-cols-1 nav-gap">
                     {quizzes[index]?.options?.map((option: string, key: number) => (
                       <div
                         key={key}
@@ -196,22 +228,11 @@ export default function Quiz() {
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center h-full">
-                  <h2 className="header-font">
-                    Your score is{" "}
-                    <span className={`text-[var(--main-${score < 50 ? "red" : "green"})]`}>
-                      {score}%
-                    </span>
-                  </h2>
-                  <p className="h2-font header-p-padding">
-                    Thank you for taking the quiz!
-                  </p>
-                  <button
-                    className="custom-button header-p-font"
-                    onClick={() => router.push("/student-dashboard")}
-                  >
-                    Go to Home
-                  </button>
+                <div className="text-center">
+                  <h2 className="h2-font">Your final score: {score}%</h2>
+                  <Link href="/student-dashboard">
+                    <button className="custom-button header-p-font mt-4">Back to Dashboard</button>
+                  </Link>
                 </div>
               )}
             </div>

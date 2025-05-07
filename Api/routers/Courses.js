@@ -6,7 +6,8 @@ import {
   updateCourse,                // ✏️ 
   deleteCourse,                 // ❌ 
   getOneCourse,
-  getCoursesByTeacher
+  getCoursesByTeacher,
+  getCoursesByQuiz
 } from "../controllers/Courses.js";
 
 const router = express.Router();
@@ -22,6 +23,9 @@ router.get("/:id", getOneCourse);
 
 // 👀 Voir tous les cours d’un enseignant
 router.get("/", getCoursesByTeacher);
+
+// 👀 Voir tous les cours d’un enseignant
+router.get("/quiz", getCoursesByQuiz);
 
 // ➕ Créer un nouveau cours
 router.post("/", createCourse);

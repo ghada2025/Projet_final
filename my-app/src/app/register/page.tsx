@@ -4,10 +4,9 @@ import Password from "@/components/password";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { useState } from "react";
-import Grade from "./grade/page";
+import Grade from "../../components/grade";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-
 
 export default function Register() {
   const elements = [
@@ -122,17 +121,33 @@ export default function Register() {
           <div className="relative w-4/10 h-screen hidden md:block">
             <Image src={`${element.mainImage}`} alt="main image" fill />
           </div>
-  
+
           {/* Main Content */}
           <div className="w-full md:w-6/10 flex flex-col justify-center items-center px-[20px]">
             <div className="w-[65vw] md:w-[65%]">
               <div className="flex nav-gap mb-[5vh]">
-                <div onClick={handleLogin} className="flex flex-col items-center">
-                  <Image src={element.student} alt="student" width={60} height={60} />
+                <div
+                  onClick={handleLogin}
+                  className="flex flex-col items-center"
+                >
+                  <Image
+                    src={element.student}
+                    alt="student"
+                    width={60}
+                    height={60}
+                  />
                   <p className="header-p-font">Student</p>
                 </div>
-                <div onClick={handleLogin} className="flex flex-col items-center">
-                  <Image src={element.teacher} alt="teacher" width={60} height={60} />
+                <div
+                  onClick={handleLogin}
+                  className="flex flex-col items-center"
+                >
+                  <Image
+                    src={element.teacher}
+                    alt="teacher"
+                    width={60}
+                    height={60}
+                  />
                   <p className="header-p-font">Teacher</p>
                 </div>
               </div>
@@ -157,10 +172,24 @@ export default function Register() {
                     name="lastName"
                   />
                 </div>
-                <InputContact isValid={isValid} onChange={handleChange} name="email" />
-                <Password isCorrect={isCorrect} num={1} onChange={handleChange} name="password" />
-                <Password isCorrect={ismatched} num={2} onChange={handleChange} name="confirmPassword" />
-  
+                <InputContact
+                  isValid={isValid}
+                  onChange={handleChange}
+                  name="email"
+                />
+                <Password
+                  isCorrect={isCorrect}
+                  num={1}
+                  onChange={handleChange}
+                  name="password"
+                />
+                <Password
+                  isCorrect={ismatched}
+                  num={2}
+                  onChange={handleChange}
+                  name="confirmPassword"
+                />
+
                 <button
                   className="custom-button w-full my-[2vw] height-input header-p-font"
                   disabled={
@@ -173,7 +202,7 @@ export default function Register() {
                 >
                   {element.button}
                 </button>
-  
+
                 <p className="header-p-font text-center underline font-bold">
                   <Link href="/login">I already have an account</Link>
                 </p>
@@ -185,5 +214,5 @@ export default function Register() {
         <Grade data={formData} />
       )}
     </>
-  );  
+  );
 }

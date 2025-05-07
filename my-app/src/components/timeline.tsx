@@ -2,7 +2,6 @@
 
 import { CheckIcon } from "lucide-react"
 import { Timeline, TimelineContent, TimelineDate, TimelineHeader, TimelineIndicator, TimelineItem, TimelineSeparator, TimelineTitle } from "@/components/ui/timeline"
-import { useState } from "react";
 
 export default function TimelineCourse({ course, last }: { course: any, last: number }) {
 

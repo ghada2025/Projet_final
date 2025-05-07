@@ -7,7 +7,6 @@ import { Textarea } from "@/components/dashboard/textarea";
 import { DateField, DateInput, TimeField } from "@/components/ui/datefield-rac";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useContainerWidth } from "@/hooks/useContainerWidth";
-import { cn } from "@/lib/utils";
 import type { CalendarDate, Time } from "@internationalized/date";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
@@ -180,7 +179,7 @@ export default function Courses() {
               {courses.map((courseItem: any, index: number) => (
                 <div
                   key={index}
-                  className="p-4 border border-x-0 shadow-sm flex items-center nav-gap justify-start"
+                  className="p-4 border border-x-0 flex items-center nav-gap justify-start"
                 >
                   <p
                     className={clsx(

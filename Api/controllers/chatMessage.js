@@ -6,12 +6,17 @@ import mongoose from "mongoose";
 
 export const createConversation = async (req, res) => {
     try {
-        const studentId = req.cookies.studentId;
+
+        const studentId = req.cookies.student;
 
         // 🔍 Trouver l'étudiant
         const student = await Student.findById(studentId);
-        if (!student || !student.classe) {
-            return res.status(404).json({ message: "Étudiant ou classe introuvable." });
+        if (!student) {
+            return res.status(404).json({ message: `Étudiant introuvable. ${studentId}` });
+        }
+
+        if (!student.classe) {
+            return res.status(404).json({ message: "classe introuvable." });
         }
 
         // 🔍 Trouver la classe de l'étudiant
@@ -47,6 +52,7 @@ export const createConversation = async (req, res) => {
         message: "Conversation créée avec succès.",
         conversation,
         });
+        console.log("conversation: ",conversation)
     } catch (err) {
         console.error("❌ Erreur dans createConversation :", err);
         res.status(500).json({ message: "Erreur serveur." });
@@ -122,6 +128,17 @@ export async function getConversationsByTeacher(req, res) {
         res.status(200).json(conversations);
     } catch (error) {
         console.error("❌ Erreur lors de la récupération des conversations du professeur :", error);
+        res.status(500).json({ message: "Erreur serveur" });
+    }
+}
+
+export async function getConversationsByStudent(req, res) {
+    try {
+        const studentId = req.cookies.student;
+        const conversation = await Conversation.find({ student: studentId }).populate("teacher", "firstName lastName email");
+        res.status(200).json(conversation);
+    } catch (error) {
+        console.error("❌ Erreur lors de la récupération de la conversations du professeur :", error);
         res.status(500).json({ message: "Erreur serveur" });
     }
 }

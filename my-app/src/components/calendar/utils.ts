@@ -6,23 +6,23 @@ import { CalendarEvent, EventColor } from "./types"
  * Get CSS classes for event colors
  */
 export function getEventColorClasses(color?: EventColor | string): string {
-  const eventColor = color || "sky"
+  const eventColor = color || "blue"
 
   switch (eventColor) {
-    case "sky":
-      return "bg-sky-200/50 hover:bg-sky-200/40 text-sky-950/80 dark:bg-sky-400/25 dark:hover:bg-sky-400/20 dark:text-sky-200 shadow-sky-700/8"
-    case "amber":
-      return "bg-amber-200/50 hover:bg-amber-200/40 text-amber-950/80 dark:bg-amber-400/25 dark:hover:bg-amber-400/20 dark:text-amber-200 shadow-amber-700/8"
-    case "violet":
-      return "bg-violet-200/50 hover:bg-violet-200/40 text-violet-950/80 dark:bg-violet-400/25 dark:hover:bg-violet-400/20 dark:text-violet-200 shadow-violet-700/8"
-    case "rose":
-      return "bg-rose-200/50 hover:bg-rose-200/40 text-rose-950/80 dark:bg-rose-400/25 dark:hover:bg-rose-400/20 dark:text-rose-200 shadow-rose-700/8"
-    case "emerald":
-      return "bg-emerald-200/50 hover:bg-emerald-200/40 text-emerald-950/80 dark:bg-emerald-400/25 dark:hover:bg-emerald-400/20 dark:text-emerald-200 shadow-emerald-700/8"
+    case "blue":
+      return "bg-blue-200/50 hover:bg-blue-200/40 text-blue-950/80 dark:bg-blue-400/25 dark:hover:bg-blue-400/20 dark:text-blue-200 shadow-blue-700/8"
+    case "orange":
+      return "bg-orange-200/50 hover:bg-orange-200/40 text-orange-950/80 dark:bg-orange-400/25 dark:hover:bg-orange-400/20 dark:text-orange-200 shadow-orange-700/8"
+    case "purple":
+      return "bg-purple-200/50 hover:bg-purple-200/40 text-purple-950/80 dark:bg-purple-400/25 dark:hover:bg-purple-400/20 dark:text-purple-200 shadow-purple-700/8"
+    case "red":
+      return "bg-red-200/50 hover:bg-red-200/40 text-red-950/80 dark:bg-red-400/25 dark:hover:bg-red-400/20 dark:text-red-200 shadow-red-700/8"
+    case "green":
+      return "bg-green-200/50 hover:bg-green-200/40 text-green-950/80 dark:bg-green-400/25 dark:hover:bg-green-400/20 dark:text-green-200 shadow-green-700/8"
     case "orange":
       return "bg-orange-200/50 hover:bg-orange-200/40 text-orange-950/80 dark:bg-orange-400/25 dark:hover:bg-orange-400/20 dark:text-orange-200 shadow-orange-700/8"
     default:
-      return "bg-sky-200/50 hover:bg-sky-200/40 text-sky-950/80 dark:bg-sky-400/25 dark:hover:bg-sky-400/20 dark:text-sky-200 shadow-sky-700/8"
+      return "bg-blue-200/50 hover:bg-blue-200/40 text-blue-950/80 dark:bg-blue-400/25 dark:hover:bg-blue-400/20 dark:text-blue-200 shadow-blue-700/8"
   }
 }
 
@@ -130,7 +130,7 @@ export function getAgendaEventsForDay(
   day: Date
 ): any {
   return events
-    .filter((event) => {
+    .filter((event:any) => {
       const eventStart = new Date(event.startDate)
       console.log("eventStart ",eventStart)
       const eventEnd = new Date(event.endDate)
@@ -141,7 +141,7 @@ export function getAgendaEventsForDay(
         (day > eventStart && day < eventEnd)
       )
     })
-    .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
+    .sort((a:any, b:any) => new Date(a.start).getTime() - new Date(b.start).getTime())
 }
 
 /**
