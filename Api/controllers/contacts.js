@@ -23,8 +23,8 @@ export async function createContact(req, res) {
         });
 
         await transporter.sendMail({
-            from: process.env.USER,
-            to: "mohamedriaddoukha@gmail.com",
+            from: email,
+            to: "mohamedriaddoukha@gmail.com", // school email
             subject: "📩 Nouveau message depuis la plateforme",
             text: message,
         });

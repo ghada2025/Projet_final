@@ -10,9 +10,10 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Image, MessageCircle, Send, Smile } from "lucide-react";
+import {  MessageCircle, Send, Smile } from "lucide-react";
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
+import Component from "@/components/fileUpload";
 
 type Student = {
   _id: string;
@@ -53,6 +54,8 @@ export default function Chat() {
   >(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   // obtenir socket io
   useEffect(() => {
@@ -115,37 +118,76 @@ export default function Chat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
   // send message
-  const handleSendMessage = () => {
-    if (!newMessage.trim() || !selectedConversation) return;
-
-    const msg: Message = {
-      senderType: "Teacher",
-      content: newMessage,
-    };
+  const handleSendMessage = async () => {
+    if (!selectedConversation) return;
+  
     const selectedConv = conversations.find(
       (conv) => conv._id === selectedConversation
     );
     const teacherId = selectedConv?.teacher;
-
-    if (!teacherId) {
-      console.error(
-        "❌ Impossible de trouver le teacherId pour la conversation sélectionnée"
-      );
-      return;
+    if (!teacherId) return;
+  
+    // S'il y a un message texte
+    if (newMessage.trim()) {
+      const msg: Message = {
+        senderType: "Teacher",
+        content: newMessage,
+      };
+  
+      socket.emit("send_message", {
+        conversation: selectedConversation,
+        senderType: msg.senderType,
+        content: msg.content,
+        senderId: teacherId,
+      });
+  
+      setMessages((prev) => [...prev, msg]);
+      setNewMessage("");
     }
-
-    // Envoyer le message au teacher via socket.io
-    socket.emit("send_message", {
-      conversation: selectedConversation,
-      senderType: msg.senderType,
-      content: msg.content,
-      senderId: teacherId,
-    });
-
-    // Display instantly
-    setMessages((prev) => [...prev, msg]);
-    setNewMessage("");
+  
+    // S'il y a une image
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append("file", imageFile);
+      formData.append("conversation", selectedConversation);
+      formData.append("senderType", "Teacher");
+      formData.append("senderId", teacherId);
+  
+      try {
+        const res = await fetch("http://localhost:5007/chat/upload", {
+          method: "POST",
+          credentials: "include",
+          body: formData,
+        });
+  
+        const data = await res.json();
+  
+        if (res.ok) {
+          socket.emit("send_message", {
+            conversation: selectedConversation,
+            senderType: "Teacher",
+            content: data.imageUrl, // ou data.path selon ton backend
+            senderId: teacherId,
+            isImage: true,
+          });
+  
+          setMessages((prev) => [
+            ...prev,
+            {
+              senderType: "Teacher",
+              content: data.imageUrl,
+            },
+          ]);
+          setImageFile(null); // Réinitialise après envoi
+        } else {
+          console.error("Image upload failed", data);
+        }
+      } catch (err) {
+        console.error("❌ Error uploading image", err);
+      }
+    }
   };
+  
 
   return (
     <div className="flex h-screen items-center bg-accent rounded-xl bg-gradient-to-br from-sidebar/60 to-sidebar border mb-5">
@@ -219,7 +261,7 @@ export default function Chat() {
                   <div ref={messagesEndRef} />
                 </div>
               </ScrollArea>
-              <div className="flex gap-2 p-5 border-t items-center [@media(max-width:530px)]:flex-col [@media(max-width:420px)]:items-center">
+              <div className="flex gap-2 p-5 relative border-t items-center [@media(max-width:530px)]:flex-col [@media(max-width:420px)]:items-center">
                 <input
                   type="text"
                   placeholder="Write a message..."
@@ -228,13 +270,7 @@ export default function Chat() {
                   className="flex-1 px-4 [@media(max-width:420px)]:px-2 py-2 min-w-0 rounded-sm border cursor-pointer  focus:outline-none focus:ring-2 shadow-sm text-sm"
                 />
                 <div className="flex gap-2 overflow-x-auto scroll-container">
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="border cursor-pointer "
-                  >
-                    <Image />
-                  </Button>
+                  <Component onFileChange={setImageFile} />
                   <Button
                     size="icon"
                     className="hover:cursor-pointer"

@@ -11,7 +11,7 @@ type Quiz = {
   type: string;
 };
 
-export default function MultiQuizForm() {
+export default function MultiQuizForm({courseId}:{courseId?:string}) {
 
   const [course, setCourse]=useState("")
   
@@ -74,7 +74,25 @@ export default function MultiQuizForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Final quizzes:", quizzes);
+    try {
+      const res = await fetch("http://localhost:5007/assignment", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          courseId: courseId,
+          questions: quizzes,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to create course");
+      }
+
+      console.log("Course created successfully!");
+    } catch (error) {
+      console.error("Error sending course creation:", error);
+    }
   };
 
   const currentQuiz = quizzes[currentPhase];
@@ -135,22 +153,6 @@ export default function MultiQuizForm() {
           required
         />
       </div>
-
-      {currentPhase == 0 && (
-        <>
-          <div>
-            <Label htmlFor="answers">The Course</Label>
-            <Input
-              id="answers"
-              name="answers"
-              value={currentQuiz.answers.join(" / ")}
-              onChange={handleChange}
-              placeholder="Write the name of the course"
-              required
-            />
-          </div>
-        </>
-      )}
 
       <div>
         <Label htmlFor="type">Type</Label>

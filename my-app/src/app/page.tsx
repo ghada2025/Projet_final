@@ -12,22 +12,22 @@ export default function Home() {
   const cardInfo = [
     {
       title: "Adaptative Quiz system for students",
-      text: "Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire pour calibrer une mise en page.",
+      text: "A dynamic quiz tool that adjusts questions based on student performance for personalized learning paths.",
       image: "/feature-1.jpg",
     },
     {
-      title: "3D learning platform service",
-      text: "Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire pour calibrer une mise en page.",
+      title: "Learning platform service",
+      text: "An all-in-one digital solution offering structured lessons, practice tools, and learning resources for users.",
       image: "/feature-2.jpg",
     },
     {
-      title: "Lean by watching video course",
-      text: "Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire pour calibrer une mise en page.",
+      title: "Learn by watching video course",
+      text: "Engage with expert-led video content designed to simplify complex topics through real-life examples.",
       image: "/feature-3.jpg",
     },
     {
       title: "Teacher and student Dashboard",
-      text: "Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire pour calibrer une mise en page.",
+      text: "A powerful interface that helps teachers track progress and students manage their learning efficiently.",
       image: "/feature-4.jpg",
     },
   ];
@@ -86,7 +86,7 @@ return(
         </div>
         <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-10">
           <div>
-            <h1 className="header-h3-font font-bold">Name of the platform</h1>
+            <h1 className="header-h3-font font-bold">Liberty School</h1>
             <p className="header-width header-p-font header-p-padding">
               Prosperity School is a groundbreaking educational institution that redefines the traditional classroom experience through an innovative and immersive approach to learning.
             </p>

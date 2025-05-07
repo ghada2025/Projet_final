@@ -190,7 +190,10 @@ export async function getCoursesByTeacher(req, res) {
   try {
     const teacherId = req.cookies.teacher;
 
-    const courses = await Course.find({ teacher: teacherId }).populate("quiz");
+    const courses = await Course.find({
+      teacher: teacherId,
+      quiz: { $exists: true },
+    }).populate("quiz");
 
     if (courses.length === 0) {
       return res.status(404).json({ message: "Cours introuvables ❌" });
@@ -229,6 +232,7 @@ export async function getCoursesByQuiz(req, res) {
       id: course._id,
       subject: course.subject,
       title: course.title,
+      color: course.color,
     }));
 
     res.status(200).json({ courses: simplifiedCourses });

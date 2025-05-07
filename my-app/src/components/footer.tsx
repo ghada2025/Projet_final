@@ -4,10 +4,10 @@ export default function Footer() {
         <footer className="max-w-[1400px] w-full h-auto px-5 md:px-[50px] footer-padding pb-0 text-white">
           <div className="flex flex-col md:flex-row justify-between tems-center md:items-start gap-10">
             <div className="text-center md:text-start">
-              <h3 className="header-h3-font">Name of the software</h3>
+              <h3 className="header-h3-font">Liberty School</h3>
               <div className="w-full flex justify-center">
               <p className="header-p-font header-p-padding footer-width">
-                We're a team of experienced developers creating innovative web and mobile solutions that empower businesses to succeed online.
+                We're a school of experienced teachers creating online solutions that help students succeed in their studies.
               </p>
               </div>
             </div>
@@ -23,15 +23,15 @@ export default function Footer() {
               <div>
                 <h3 className="header-h3-font">Get in Touch</h3>
                 <ul className="header-p-padding header-p-font">
-                  <li>Email@example.com</li>
+                  <li>doukhamohamedriad@gmail.com</li>
                   <li className="underline">Our location</li>
-                  <li>+213 542 89 75 41</li>
+                  <li>+213 540 30 59 88</li>
                 </ul>
               </div>
             </div>
           </div>
           <hr className="mt-6"/>
-          <p className="header-p-font header-p-padding text-center mt-4">&copy; 2025 Software Name. All rights reserved.</p>
+          <p className="header-p-font header-p-padding text-center mt-4">&copy; 2025 Liberty School. All rights reserved.</p>
         </footer>
       </div>
     );

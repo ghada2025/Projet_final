@@ -5,110 +5,64 @@ import { useContainerWidth } from "@/hooks/useContainerWidth";
 import { CalendarDate } from "@internationalized/date";
 import { RiCursorLine } from "@remixicon/react";
 import clsx from "clsx";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Classes() {
   const [items, setItems] = useState<any[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpen2, setIsOpen2] = useState(false);
   const [title, setTitle] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [selectedDate, setSelectedDate] = useState<CalendarDate | null>(null);
   const [gridRef, containerWidth] = useContainerWidth();
   const originalWidth = 1000;
-  const [courses, setCourses] = useState<any>([
-    {
-      id: "680e737be3e5be91b9705b1f",
-      subject: "Mathematics",
-      title: "Linear Functions",
-      description: "Introduction to linear and affine functions.",
-      color: "blue",
-      quizz: [
-        {
-          title: "Q1",
-          question:
-            "Quel est le principe fondamental de la dynamique selon Newton ?",
-          options: [
-            "Un objet reste en mouvement sauf si une force agit sur lui",
-            "L’énergie ne peut être ni créée ni détruite",
-            "La force est égale à la masse multipliée par l’accélération",
-            "Toute action a une réaction égale et opposée",
-          ],
-          answers: [
-            "La force est égale à la masse multipliée par l’accélération",
-          ],
-          type: "QCS",
-        },
-        {
-          title: "Q2",
-          question:
-            "Lesquelles des affirmations suivantes concernent les forces ?",
-          options: [
-            "La force gravitationnelle est toujours attractive",
-            "Les forces peuvent modifier la forme d’un objet",
-            "Les forces sont mesurées en newtons",
-            "La force dépend uniquement de la vitesse",
-          ],
-          answers: [
-            "La force gravitationnelle est toujours attractive",
-            "Les forces peuvent modifier la forme d’un objet",
-            "Les forces sont mesurées en newtons",
-          ],
-          type: "QCM",
-        },
-        {
-          title: "Q3",
-          question:
-            "Which tense is used to describe completed actions in the past?",
-          options: [
-            "Present",
-            "Past continuous",
-            "Past perfect",
-            "Simple past",
-          ],
-          answers: ["Simple past"],
-          type: "QCS",
-        },
-      ],
-    },
-  ]);
+  const [courses, setCourses] = useState<any>([]);
+  const [course, setCourse] = useState<any>([]);
+  const [id, setId] = useState<any>();
+
+
+  console.log(isOpen)
 
   // ✅ Always at top-level
   useEffect(() => {
-    if (!isOpen) {
-      const fetchPosts = async () => {
-        try {
-          const res = await fetch(`http://localhost:5007/course`, {
-            method: "GET",
-            credentials: "include",
-            headers: { "Content-Type": "application/json" },
-          });
-
-          if (!res.ok) {
-            const text = await res.text();
-            console.error("Server error:", text);
-            return;
-          }
-
-          const contentType = res.headers.get("content-type");
-          if (!contentType || !contentType.includes("application/json")) {
-            const text = await res.text();
-            console.error("Expected JSON but got:", text);
-            return;
-          }
-
-          const dataAdd = await res.json();
-          setCourses(dataAdd.courses);
-          console.log("Fetched courses: ", dataAdd.courses);
-        } catch (error) {
-          console.error("Error fetching data:", error);
+    const fetchCourses = async () => {
+      try {
+        const endpoint = `http://localhost:5007/course${isOpen ? "/quiz" : "/"}`;
+        const res = await fetch(endpoint, {
+          method: "GET",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+        });
+  
+        const contentType = res.headers.get("content-type");
+        const responseText = await res.text();
+  
+        if (!res.ok) {
+          console.error("Server error:", responseText);
+          return;
         }
-      };
-
-      fetchPosts();
-    }
-  }, [isOpen]);
+  
+        if (!contentType || !contentType.includes("application/json")) {
+          console.error("Expected JSON but got:", responseText);
+          return;
+        }
+  
+        const dataAdd = JSON.parse(responseText);
+        if (dataAdd?.courses) {
+          isOpen ? setCourse(dataAdd.courses) : setCourses(dataAdd.courses);
+          setItems(dataAdd.courses)
+        } else {
+          console.warn("No 'courses' field in response.");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchCourses();
+  }, [isOpen]);  
 
   // ✅ Top-level effect
   useEffect(() => {
@@ -116,37 +70,6 @@ export default function Classes() {
       setCourses(assignRandomColors(items));
     }
   }, [items]);
-
-  const handleCourseQuiz = async () => {
-    if (isOpen) {
-      try {
-        const res = await fetch(`http://localhost:5007/course/quiz`, {
-          method: "GET",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-        });
-
-        if (!res.ok) {
-          const text = await res.text();
-          console.error("Server error:", text);
-          return;
-        }
-
-        const contentType = res.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-          const text = await res.text();
-          console.error("Expected JSON but got:", text);
-          return;
-        }
-
-        const dataAdd = await res.json();
-        setCourses(dataAdd.courses);
-        console.log("Fetched quizzes: ", dataAdd.courses);
-      } catch (error) {
-        console.error("Error fetching quiz:", error);
-      }
-    }
-  };
 
   const assignRandomColors = (classes: any[]) => {
     const colors = ["red", "green", "blue", "orange"];
@@ -202,7 +125,6 @@ export default function Classes() {
     orange: "bg-orange-300 border-orange-600 text-orange-600",
   };
 
-  console.log(selectedCourse);
 
   return (
     <>
@@ -213,40 +135,22 @@ export default function Classes() {
               isQuiz
               onClick={() => {
                 setIsOpen(true);
-                handleCourseQuiz();
               }}
             />
             {isOpen && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#3b3b3b]">
                 <div className="bg-white w-[90vw] max-w-[600px] rounded-lg shadow-lg p-6 relative animate-fadeIn">
-                  {/* <button
-                    onClick={() => setIsOpen(false)}
-                    className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-xl"
-                  >
-                    &times;
-                  </button>
-
-                  <div>
-                    <h2 className="text-2xl font-semibold mb-4">
-                      Create a new Quiz
-                    </h2>
-                    <p className="text-gray-700 mb-6">
-                      Test your students with good questions
-                    </p>
-                  </div>
-                  <div className="h-[66vh] overflow-y-auto scroll-container">
-                    <MultiQuizForm></MultiQuizForm>
-                  </div> */}
                   <button
                     onClick={() => setIsOpen(false)}
                     className="absolute top-1 right-2 text-gray-500 hover:text-gray-800 text-xl"
                   >
                     &times;
                   </button>
-                  {courses.map((classItem: any, index: number) => (
+                  {course.map((classItem: any, index: number) => (
                     <div
                       key={index}
-                      className="p-4 border shadow-sm flex flex-col items-center gap-3 justify-center flex-wrap"
+                      className="p-4 border shadow-sm flex flex-col items-center gap-3 justify-center flex-wrap cursor-pointer"
+                      onClick={() => {setIsOpen2(true), setId(classItem.id)}}
                     >
                       <h2
                         className={clsx(
@@ -256,7 +160,7 @@ export default function Classes() {
                           ]
                         )}
                       >
-                        {index}
+                        {index+1}
                       </h2>
                       <div>
                         <h2 className="text-center text-sm font-semibold">
@@ -265,6 +169,53 @@ export default function Classes() {
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+            {isOpen2 && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#3b3b3b]">
+                <div className="bg-white w-[90vw] max-w-[600px] rounded-lg shadow-lg p-6 relative animate-fadeIn">
+                  <button
+                    onClick={() => setIsOpen2(false)}
+                    className="absolute top-1 right-2 text-gray-500 hover:text-gray-800 text-xl"
+                  >
+                    &times;
+                  </button>
+                  
+
+
+
+                  <div>
+
+
+                    <h2 className="text-2xl font-semibold mb-4">
+
+
+                      Create a new Quiz
+
+
+                    </h2>
+
+
+                    <p className="text-gray-700 mb-6">
+
+
+                      Test your students with good questions
+
+
+                    </p>
+
+
+                  </div>
+
+
+                  <div className="h-[66vh] overflow-y-auto scroll-container">
+
+
+                    <MultiQuizForm courseId={id}></MultiQuizForm>
+
+
+                  </div>
                 </div>
               </div>
             )}

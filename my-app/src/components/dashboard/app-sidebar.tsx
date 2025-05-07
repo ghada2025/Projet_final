@@ -98,7 +98,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar {...props}>
       <SidebarHeader>
         <div className="py-4 flex items-center gap-3">
-          <Image src={"/logo.png"} alt="logo" width={30} height={30}></Image>
+          <Image src={"/end.svg"} alt="logo" width={30} height={30}></Image>
           <h2 className="font-bold text-xl">Liberty School</h2>
         </div>
         <hr className="border-t border-border mx-2 -mt-px" />
