@@ -1,6 +1,6 @@
 import { Conversation } from "../models/Conversation.js";
 import { Student } from "../models/Student.js";
-import { Classe } from "../models/Classe.js";
+import { Classe } from "../models/classe.js";
 import { ChatMessage } from "../models/ChatMessage.js";
 import mongoose from "mongoose";
 
