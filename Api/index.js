@@ -43,7 +43,7 @@ app.use(helmet());
 // ✅ Middleware CORS
 app.use(cors(
     {
-        origin: "http://localhost:3000",
+        origin: "liberty-school.vercel.app",
         credentials: true,
     }
 ));
