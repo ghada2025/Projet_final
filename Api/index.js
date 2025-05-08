@@ -24,7 +24,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "https://liberty-school.vercel.app",
+        origin: "https://liberty-school-ghadas-projects-8123699c.vercel.app",
         credentials: true,
     }
 });
@@ -43,7 +43,7 @@ app.use(helmet());
 // ✅ Middleware CORS
 app.use(cors(
     {
-        origin: "https://liberty-school.vercel.app",
+        origin: "https://liberty-school-ghadas-projects-8123699c.vercel.app",
         credentials: true,
     }
 ));
