@@ -84,8 +84,10 @@ export async function loginTeacher(req, res) {
         }
         // 🍪 Création du cookie de session
         const options = {
-            maxAge: MILLISECONDS_IN_A_DAY * 14, // 📅 14 jours
-            httpOnly: true, // 🔒 sécurité
+            maxAge: MILLISECONDS_IN_A_DAY * 14, // 14 jours
+            httpOnly: true,                     // inaccessible en JS
+            secure: true,                       // requis en HTTPS
+            sameSite: "None",                   // accepte le cross-site
             path: '/',
         };
         res.cookie("teacher", teacher.id, options); // ✅ cookie envoyé
